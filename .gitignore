@@ -1,0 +1,21 @@
+# node
+node_modules/
+
+# Build Folders
+dist/
+lib/
+
+# MacOS Finder
+.DS_Store
+
+# IDE Folder
+.idea
+.vscode
+
+# Jest Snapshot Folder
+**/__snapshots__/
+**/coverage/
+**/.coverage/
+**/jest-cache/
+**/.jest-cache/
+**/__data__/**
