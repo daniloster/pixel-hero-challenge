@@ -50,6 +50,10 @@ module.exports = {
     '<rootDir>/tools/',
   ],
   testEnvironment: 'jsdom',
+  transform: {
+    '^.+\\.js$': 'babel-jest',
+    '^.+\\.svelte$': 'svelte-jester',
+  },
   testURL: 'http://localhost/',
   verbose: true,
 }
