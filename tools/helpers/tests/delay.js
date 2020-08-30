@@ -1,5 +1,7 @@
-import { act } from '@testing-library/react'
+import { act } from '@testing-library/svelte'
 
 export default async function delay(ms) {
-  return await act(async () => await new Promise(resolve => setTimeout(() => resolve(), ms))) 
+  return await act(
+    async () => await new Promise((resolve) => setTimeout(() => resolve(), ms)),
+  )
 }
