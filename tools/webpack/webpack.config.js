@@ -6,29 +6,23 @@ const WorkerPlugin = require('worker-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
 const DEV_PORT = process.env.PORT
-const env = { production: false }
+const env = { production: process.env.NODE_ENV === 'production' }
+console.log({ env })
 module.exports = {
-  entry: './DEV/index.jsx',
+  entry: './dev/index.js',
+  target: 'web',
   devtool: 'source-map',
-  mode: env.production ? 'production' : 'development',
   node: {
     global: false,
     __dirname: false,
     __filename: true,
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    'react-router': 'ReactRouter',
-    'react-router-dom': 'ReactRouterDOM',
-    'styled-components': 'styled',
-  },
   resolve: {
     alias: {
       'pixel-hero': path.resolve(__dirname, '../../src'),
     },
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx'],
-    mainFields: ['svelte', 'browser', 'module', 'main'],
+    extensions: ['.mjs', '.js', '.ts'],
+    mainFields: ['browser', 'module', 'main'],
   },
   module: {
     rules: [
@@ -45,7 +39,8 @@ module.exports = {
          * falling back to file-loader
          */
         // test: /\.(png|jpg|jpeg|gif)$/i,
-        test: /^(.(?!(html|js|jsx|ts|tsx)))+$/i,
+        // test: /^(.(?!(html|js|jsx|ts|tsx)))+$/i,
+        test: /^(.(?!(svelte|html|js|jsx|ts|tsx)))+$/i,
         use: [
           {
             loader: 'url-loader',
@@ -60,7 +55,7 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, '../../dist/'),
     historyApiFallback: true,
-    compress: true,
+    compress: !env.production,
     hot: true,
     port: DEV_PORT,
     publicPath: '/',
@@ -71,23 +66,19 @@ module.exports = {
     publicPath: '/',
   },
   optimization: {
-    minimize: true,
+    minimize: env.production,
     minimizer: [
-      new TerserPlugin({
-        test: /\.js(\?.*)?$/i,
-        extractComments: 'all',
-        terserOptions: {
-          ie8: false,
-        },
-      }),
-    ],
+      env.production &&
+        new TerserPlugin({
+          test: /\.js(\?.*)?$/i,
+          extractComments: 'all',
+          terserOptions: {
+            ie8: false,
+          },
+        }),
+    ].filter((isValid) => !!isValid),
   },
   plugins: [
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     { from: 'DEV/assets', to: 'assets' },
-    //   ]
-    // }),
     new WorkerPlugin(),
     env.production &&
       new CompressionWebpackPlugin({
@@ -105,12 +96,6 @@ module.exports = {
       templateContent: `
 <html>
   <head>
-    <script crossorigin src="https://unpkg.com/react@16.13.1/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16.13.1/umd/react-dom.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-is@16.13.1/umd/react-is.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/5.2.0/react-router.min.js" integrity="sha512-sWGrnSIvNDdGRsqnFIm5q1uHjPt5912wNVBK9vChpbHPReP96giWBGeztcd/rva+n82nQLTJ1SFbZqLHbCqMiw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.2.0/react-router-dom.min.js" integrity="sha512-NG4Cm3Ubs7d/nPyzrTFM53RP8tPjQhRT0hea48yJ/qEXsuhq7wGbjX68A5gBiW6BoCQbqE3/M+UOj2lLXPauhw==" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/styled-components@5.1.1/dist/styled-components.min.js"></script>
     <style>
       * {
         margin: 0;

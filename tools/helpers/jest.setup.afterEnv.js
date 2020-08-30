@@ -2,13 +2,14 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
+import noop from '../../src/common/noop'
 import mockMutationObserver from './mockMutationObserver'
 import mockNavigator from './mockNavigator'
 import delay from './tests/delay'
 
-function noop() {}
-
 beforeEach(() => {
+  // document.body.removeChild(document.body.firstChild)
+  document.body.innerHTML = ''
   global.delay = delay
   String.prototype.matchAll = function (...args) {
     let pointerIndex = -1
@@ -38,4 +39,3 @@ beforeEach(() => {
   localStorage.setItem('language', '')
   jest.useRealTimers()
 })
-
