@@ -1,5 +1,5 @@
-import Component from '../../common/Component'
-import CSS from '../../common/CSS'
+import Component from '../../common/ui/Component'
+import CSS from '../../common/ui/CSS'
 
 // const className = new CSS('player')
 // className.scope('animation: fly-stand 0.8s ease infinite;')

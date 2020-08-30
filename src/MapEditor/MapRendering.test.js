@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/dom'
 import render from '../../tools/helpers/tests/render'
-import ObservableState from '../common/reactive/ObservableState'
+import ObservableState from '../common/ObservableState'
 import MapRendering from './MapRendering'
 import { Dictionary } from './Tilemap'
 

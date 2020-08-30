@@ -1,5 +1,5 @@
-import Component from '../common/Component'
-import CSS from '../common/CSS'
+import Component from '../common/ui/Component'
+import CSS from '../common/ui/CSS'
 
 const LINE_COLOR = '#013a99'
 const BG_COLOR = '#63a3cc'

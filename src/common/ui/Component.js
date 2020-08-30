@@ -1,4 +1,5 @@
-import noop from './noop'
+import noop from '../noop'
+import ObservableState from '../ObservableState'
 import factoryAssignment from './reactive/factoryAssignment'
 import factoryAttrs from './reactive/factoryAttrs'
 import factoryClassList from './reactive/factoryClassList'
@@ -6,7 +7,6 @@ import factoryEvents, {
   DESTROY_EVENT_ID,
   MOUNT_EVENT_ID,
 } from './reactive/factoryEvents'
-import ObservableState from './reactive/ObservableState'
 import walkThroughTree from './walkThroughTree'
 
 const internalRef = Symbol('element')

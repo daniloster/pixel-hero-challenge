@@ -1,4 +1,4 @@
-import ObservableState from './ObservableState'
+import ObservableState from '../../ObservableState'
 
 export default function factoryClassList(element, observable) {
   return ObservableState.observe(observable, (newValue) => {

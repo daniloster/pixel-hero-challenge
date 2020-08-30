@@ -1,5 +1,5 @@
-import Component from '../../common/Component'
-import CSS from '../../common/CSS'
+import Component from '../../common/ui/Component'
+import CSS from '../../common/ui/CSS'
 import HeartIcon from '../../icons/HeartIcon'
 
 export default function Heart({ key }) {

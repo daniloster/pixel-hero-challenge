@@ -1,5 +1,5 @@
-import Component from '../../common/Component'
-import CSS from '../../common/CSS'
+import Component from '../../common/ui/Component'
+import CSS from '../../common/ui/CSS'
 
 const className = new CSS('player')
 className.modifier('.shake', 'animation: shake 0.5s ease infinite;')

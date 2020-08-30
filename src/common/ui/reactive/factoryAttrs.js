@@ -1,4 +1,4 @@
-import ObservableState from './ObservableState'
+import ObservableState from '../../ObservableState'
 
 const TOGGLE_ATTRS = ['selected', 'disabled']
 

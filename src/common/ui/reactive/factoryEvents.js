@@ -1,4 +1,4 @@
-import ObservableState from './ObservableState'
+import ObservableState from '../../ObservableState'
 
 export const DESTROY_EVENT_ID = `destroy:observers:${Date.now()}`
 export const MOUNT_EVENT_ID = `mount:observers:${Date.now()}`

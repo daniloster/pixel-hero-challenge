@@ -1,7 +1,7 @@
 // import MapInput from './MapInput'
-import Component from '../../common/Component'
-import CSS from '../../common/CSS'
-import ObservableState from '../../common/reactive/ObservableState'
+import ObservableState from '../../common/ObservableState'
+import Component from '../../common/ui/Component'
+import CSS from '../../common/ui/CSS'
 
 const className = new CSS('container')
 className.scope('color: red; width: 100%;')

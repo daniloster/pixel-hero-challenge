@@ -1,4 +1,4 @@
-import ObservableState from './reactive/ObservableState'
+import ObservableState from '../ObservableState'
 
 function random(max) {
   return (Math.floor(Math.random() * max) * 7) % max
