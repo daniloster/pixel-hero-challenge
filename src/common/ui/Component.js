@@ -9,6 +9,7 @@ import factoryEvents, {
   DESTROY_EVENT_ID,
   MOUNT_EVENT_ID,
 } from './reactive/factoryEvents'
+import factoryStyles from './reactive/factoryStyles'
 import walkThroughTree from './walkThroughTree'
 
 export const internalRef = Symbol('element')
@@ -42,6 +43,7 @@ export default function Component(tag, props) {
     key = '',
     events = EMPTY_OBJECT,
     attrs = EMPTY_OBJECT,
+    style = EMPTY_OBJECT,
     ns,
     onMount = noop,
     onDestroy = noop,
@@ -64,6 +66,7 @@ export default function Component(tag, props) {
   factoryClassList(element, classList)
   factoryEvents(element, events)
   factoryAttrs(element, attrs, !!ns)
+  factoryStyles(element, style)
 
   this.onMount = () => {
     onMount()

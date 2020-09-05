@@ -72,15 +72,21 @@ export default function MapRendering({ tilemap, columns, rows }) {
   })
 }
 
+const classNameTile = new CSS('tile')
+classNameTile.scope(
+  `position: absolute; width: ${UNIT_SIZE}px; height: ${UNIT_SIZE}px;`,
+)
+classNameTile.scope(`left: calc(var(--column) * ${UNIT_SIZE}px);`)
+classNameTile.scope(`top: calc(var(--row) * ${UNIT_SIZE}px);`)
+classNameTile.scope(
+  '.tile-content',
+  'position: relative; height: 100%; width: 100%;',
+)
+classNameTile.scope(
+  '.tile-asset',
+  'z-index: var(--z-index); position: absolute; top: 0; right: 0; bottom: 0; left: 0;',
+)
 function Tile({ key, row, column, tilemap }) {
-  const className = new CSS('tile')
-  className.scope(
-    `position: absolute; width: ${UNIT_SIZE}px; height: ${UNIT_SIZE}px;`,
-  )
-  className.scope(`left: ${column * UNIT_SIZE}px;`)
-  className.scope(`top: ${row * UNIT_SIZE}px;`)
-  className.scope('> *', 'height: 100%; width: 100%;')
-
   const tokens = ObservableState.observeTransform(
     tilemap,
     (tilemapValues) => (tilemapValues[row] || [])[column] || [Dictionary.None],
@@ -94,22 +100,37 @@ function Tile({ key, row, column, tilemap }) {
         return oldChildren
       }
       oldKey = key
-      return tokenValues.map(
-        (tokenValue) => new MAP_TILEMAP[tokenValue]({ key, column, row }),
-      )
+      return new TileContent({ key, assets: tokenValues })
     },
   )
 
   return new Component('div', {
     key,
-    className,
+    className: classNameTile,
     children,
+    style: { '--row': row, '--column': column },
     attrs: {
       'data-testid': ObservableState.observeTransform(
         tokens,
         (tokenValues) => `Tile:${tokenValues.join('|')}`,
       ),
     },
+  })
+}
+
+function TileContent({ key, assets }) {
+  return new Component('div', {
+    className: 'tile-content',
+    key,
+    children: assets.map(
+      (tokenValue, index) =>
+        new Component('div', {
+          className: 'tile-asset',
+          key,
+          style: { '--z-index': index + 1 },
+          children: [new MAP_TILEMAP[tokenValue]({ key })],
+        }),
+    ),
   })
 }
 

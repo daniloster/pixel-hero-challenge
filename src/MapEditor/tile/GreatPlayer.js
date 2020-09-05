@@ -10,7 +10,7 @@ import CSS from '../../common/ui/CSS'
 // className.scope('> g', 'animation: fly-move 0.6s linear infinite;')
 const className = new CSS('player')
 className.modifier('.shake', 'animation: shake 0.5s ease infinite;')
-className.scope('padding: 0.2rem;')
+className.scope('padding: 0.2rem; height: 100%; width: 100%;')
 className.scope('> div', 'background-color: yellow; width: 100%; height: 100%;')
 
 const ns = 'http://www.w3.org/2000/svg'
