@@ -3,7 +3,7 @@ import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
 import TilemapCell from './TilemapCell'
 
-const className = new CSS('container')
+const className = new CSS('map-input')
 className.scope(`
   display: flex;
   flex-direction: row;

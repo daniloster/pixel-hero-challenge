@@ -6,7 +6,7 @@ import { MAX_COLUMNS, MAX_ROWS, MIN_COLUMNS, MIN_ROWS } from '../common/units'
 const COLUMN_ID = 'dimensionColumns'
 const ROW_ID = 'dimensionRows'
 
-const className = new CSS('container')
+const className = new CSS('map-dimension')
 className.scope(
   '.MapDimensionLayout__slider',
   `

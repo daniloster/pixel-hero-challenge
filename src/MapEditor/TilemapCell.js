@@ -3,7 +3,7 @@ import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
 import { options } from './Tilemap'
 
-const containerClassName = new CSS('container')
+const containerClassName = new CSS('tilemap-cell')
 containerClassName.scope('select', 'width: 100%;')
 
 const DATA_ROW_INDEX = 'data-row-index'
@@ -24,12 +24,12 @@ export default function TilemapCell({
       set({
         rowIndex,
         columnIndex,
-        value: e.target.value,
+        value: [e.target.value],
       })
     }
   })
   const value = ObservableState.observeTransform(tilemap, (tilemapValues) => {
-    return tilemapValues[rowIndex][columnIndex]
+    return tilemapValues[rowIndex][columnIndex][0]
   })
 
   return new Component('div', {

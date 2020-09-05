@@ -10,12 +10,14 @@ import RescuePoint from './tile/RescuePoint'
 import Wall, { WALL_COLOR } from './tile/Wall'
 import { Dictionary } from './Tilemap'
 
-const className = new CSS('container')
+const className = new CSS('map-rendering')
 className.scope(`padding: ${UNIT_SIZE / 2}; background-color: ${WALL_COLOR};`)
 className.scope(
   '.MapArea',
   'height: 100%; width: 100%; position: relative; background-color: #c0c0c0;',
 )
+
+const INITIAL_TILEMAP = [[[]]]
 
 export default function MapRendering({ tilemap, columns, rows }) {
   className.scope(
@@ -33,7 +35,7 @@ export default function MapRendering({ tilemap, columns, rows }) {
 
   const children = ObservableState.observeTransform(
     tilemap,
-    (tilemapValues, oldChildren) => {
+    (tilemapValues = [[[]]], oldChildren = []) => {
       const childNodes = []
       tilemapValues.forEach((cells, rowIndex) =>
         cells.forEach((_, columnIndex) => {
@@ -79,13 +81,24 @@ function Tile({ key, row, column, tilemap }) {
   className.scope(`top: ${row * UNIT_SIZE}px;`)
   className.scope('> *', 'height: 100%; width: 100%;')
 
-  const token = ObservableState.observeTransform(
+  const tokens = ObservableState.observeTransform(
     tilemap,
-    (tilemapValues) => (tilemapValues[row] || [])[column] || Dictionary.None,
+    (tilemapValues) => (tilemapValues[row] || [])[column] || [Dictionary.None],
   )
-  const children = ObservableState.observeTransform(token, (tokenValue) => [
-    new MAP_TILEMAP[tokenValue]({ key, column, row }),
-  ])
+  let oldKey = null
+  const children = ObservableState.observeTransform(
+    tokens,
+    (tokenValues, oldChildren) => {
+      const key = `${tokenValues.join('-')}-${row}-${column}`
+      if (oldKey === key) {
+        return oldChildren
+      }
+      oldKey = key
+      return tokenValues.map(
+        (tokenValue) => new MAP_TILEMAP[tokenValue]({ key, column, row }),
+      )
+    },
+  )
 
   return new Component('div', {
     key,
@@ -93,8 +106,8 @@ function Tile({ key, row, column, tilemap }) {
     children,
     attrs: {
       'data-testid': ObservableState.observeTransform(
-        token,
-        (tokenValue) => `Tile:${tokenValue}`,
+        tokens,
+        (tokenValues) => `Tile:${tokenValues.join('|')}`,
       ),
     },
   })
@@ -105,7 +118,7 @@ const MAP_TILEMAP = {
   [Dictionary.RescuableBox]: RescuableBox,
   [Dictionary.Bomb]: () => new Component('div'),
   [Dictionary.Heart]: Heart,
-  [Dictionary.Player]: () => new Player({ isBlackPower: true }),
+  [Dictionary.Player]: Player,
   [Dictionary.RescuePoint]: RescuePoint,
   [Dictionary.Wall]: Wall,
   [Dictionary.None]: () => new Component('div'),

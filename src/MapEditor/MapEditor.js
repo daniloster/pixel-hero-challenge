@@ -1,18 +1,19 @@
 // import MapInput from './MapInput'
-import noop from '../common/noop'
+import Modal from '../common/components/Modal'
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
 import { MAX_COLUMNS, MAX_ROWS } from '../common/units'
+import GamePlay from '../GamePlay/GamePlay'
 import MapDimension from './MapDimension'
 import MapInput from './MapInput'
 import MapRendering from './MapRendering'
-import { factoryTilemap } from './Tilemap'
+import { factoryTilemap, serializeMap } from './Tilemap'
 import isButtonDisabled from './validations/isButtonDisabled'
 import toValidationMessages from './validations/toValidationMessages'
 import ValidationMessages from './validations/ValidationMessages'
 
-const className = new CSS('container')
+const className = new CSS('map-editor')
 className.scope(
   'h2',
   `
@@ -121,6 +122,19 @@ function MapSubmission({ tilemap }) {
     toValidationMessages,
   )
   const disabled = ObservableState.observeTransform(messages, isButtonDisabled)
+  const gamePlay = new GamePlay({
+    serialized: ObservableState.observeTransform(tilemap, serializeMap),
+  })
+  const modal = new Modal({
+    children: [
+      new Component('div', {
+        children: [gamePlay],
+      }),
+    ],
+    onOpen: () => {
+      gamePlay.restart()
+    },
+  })
   return new Component('div', {
     className: 'MapSubmission',
     children: [
@@ -128,7 +142,15 @@ function MapSubmission({ tilemap }) {
       new ValidationMessages({ messages }),
       new Component('button', {
         attrs: { type: 'button', disabled },
-        events: { click: noop },
+        events: {
+          /**
+           * @param {Event} e
+           */
+          click: (e) => {
+            e.stopPropagation()
+            modal.open()
+          },
+        },
         children: 'First: can you finish it?',
       }),
     ],

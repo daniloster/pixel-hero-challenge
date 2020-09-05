@@ -54,7 +54,17 @@ CSS.animation('pulse-color')
   )
   .build()
 
-const className = new CSS('container')
+CSS.animation('modal-in')
+  .step('0%', 'transform: scale(0.1); opacity: 0;')
+  .step('100%', 'transform: scale(1); opacity: 1;')
+  .build()
+
+CSS.animation('modal-out')
+  .step('0%', 'transform: scale(1); opacity: 1;')
+  .step('100%', 'transform: scale(0.1); opacity: 0;')
+  .build()
+
+const className = new CSS('pixel-hero')
 className.scope('padding: 0.5rem;')
 className.scope('h1', 'padding: 0 0 1.5rem 0;')
 

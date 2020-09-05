@@ -14,11 +14,15 @@ export const options = [[Dictionary.None, Dictionary.None]].concat(
 )
 
 const DEFAULT_TILEMAP = [
-  [Dictionary.None, Dictionary.RescuableBox, Dictionary.RescuePoint],
-  [Dictionary.None, Dictionary.Player, Dictionary.None],
-  [Dictionary.None, Dictionary.MoveableBox, Dictionary.None],
+  [[Dictionary.None], [Dictionary.RescuableBox], [Dictionary.RescuePoint]],
+  [[Dictionary.None], [Dictionary.Player], [Dictionary.None]],
+  [[Dictionary.None], [Dictionary.MoveableBox], [Dictionary.None]],
 ]
 const EMPTY_ARRAY = []
+
+export function serializeMap(tilemap) {
+  return JSON.stringify(tilemap)
+}
 
 export function factoryTilemap(
   rows,
@@ -28,8 +32,9 @@ export function factoryTilemap(
   return Array.from({ length: rows }).map((row, rowIndex) =>
     Array.from({ length: columns }).map(
       (column, columnIndex) =>
-        (existingTilemap[rowIndex] || EMPTY_ARRAY)[columnIndex] ||
-        Dictionary.None,
+        (existingTilemap[rowIndex] || EMPTY_ARRAY)[columnIndex] || [
+          Dictionary.None,
+        ],
     ),
   )
 }
