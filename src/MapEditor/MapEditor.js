@@ -124,6 +124,7 @@ function MapSubmission({ tilemap }) {
   const disabled = ObservableState.observeTransform(messages, isButtonDisabled)
   const gamePlay = new GamePlay({
     serialized: ObservableState.observeTransform(tilemap, serializeMap),
+    isMapEditor: true,
   })
   const modal = new Modal({
     children: [

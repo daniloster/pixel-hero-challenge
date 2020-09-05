@@ -5,9 +5,11 @@ import { Dictionary } from '../MapEditor/Tilemap'
 import { ComputeDirection } from './computeMovement'
 import GameState from './GameState'
 import Keys from './Keys'
+import GameFinished from './states/GameFinished'
 import GameOver from './states/GameOver'
 import GameRunning from './states/GameRunning'
 import Toolbar from './states/Toolbar'
+import validateGameFinished from './validateGameFinished'
 
 function useGameMap(serialized) {
   return ObservableState.observeTransform(serialized, (json) =>
@@ -102,6 +104,7 @@ function processGameLoop(gameState, mapState, actions) {
     const currentState = stackState[stackState.length - 1]
     if (currentState === GameState.Running) {
       processGameAction(mapState, action)
+      validateGameFinished(gameState, mapState)
     }
   })
 }
@@ -137,12 +140,12 @@ function processGameAction(mapState, action) {
 
 const className = new CSS('game-play')
 
-export default function GamePlay({ serialized }) {
+export default function GamePlay({ serialized, isMapEditor }) {
   const [state, map, restart] = useGameLoop(useGameMap(serialized))
   const component = new Component('div', {
     className,
     children: [
-      // new GamePaused({ state }),
+      new GameFinished({ state, map, isMapEditor }),
       new GameOver({ state }),
       new GameRunning({ state, map }),
       new Toolbar({ state }),
