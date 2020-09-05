@@ -1,5 +1,7 @@
 import noop from '../noop'
 import ObservableState from '../ObservableState'
+import getRandomHash from './getRandomHash'
+import random from './random'
 import factoryAssignment from './reactive/factoryAssignment'
 import factoryAttrs from './reactive/factoryAttrs'
 import factoryClassList from './reactive/factoryClassList'
@@ -9,36 +11,27 @@ import factoryEvents, {
 } from './reactive/factoryEvents'
 import walkThroughTree from './walkThroughTree'
 
-const internalRef = Symbol('element')
+export const internalRef = Symbol('element')
 const EMPTY_LIST = []
 const EMPTY_OBJECT = {}
 const PRIMITIVE_TYPES = ['string', 'number']
 const DATA_ITERATION_KEY = 'data-iteration-key'
-/**
- * @typedef {Events}
- * @property {EventHandler} click
- * @property {EventHandler} blur
- */
-/**
- * @typedef {Attrs}
- * @property {any|ObservableState} [string]
- */
 
-/**
- * @typedef {Props}
- * @property {Attrs} attrs
- * @property {import("./types").ObservableState|{[key:string]: boolean}} classList
- * @property {CSS|string} className
- * @property {string} key
- * @property {Array<Component>|string} children
- * @property {Events} events
- */
+const RandomHash = getRandomHash()
 
+function isSameChildren(children) {
+  return Array.isArray(children)
+    ? children
+        .map(({ key }) => key)
+        .filter((key) => !!key)
+        .join('|')
+    : children
+}
 /**
  * Component base
  * @param {string} tag
- * @param {Props} props
- * @returns {Component}
+ * @param {import("../types").ComponentProps} props
+ * @returns {import("../types").Component}
  */
 export default function Component(tag, props) {
   const {
@@ -54,6 +47,11 @@ export default function Component(tag, props) {
     onDestroy = noop,
   } = props || EMPTY_OBJECT
   this.children = children
+  this.key =
+    key ||
+    `${RandomHash[random(100)]}-${RandomHash[random(100)]}-${random(
+      10000,
+    )}-${random(10000)}`
   const create = ns
     ? (tag) => document.createElementNS(ns, tag)
     : (tag) => document.createElement(tag)
@@ -86,17 +84,17 @@ export default function Component(tag, props) {
     e.preventDefault()
     walkThroughTree([this], (component) => component.onDestroy())
   })
-
-  if (children instanceof ObservableState) {
-    ObservableState.observe(children, (node) => {
+  ObservableState.observeSync(
+    ObservableState.observeTransform([children]),
+    (node) => {
+      console.log({ children: [].concat(node || EMPTY_LIST) })
       if (PRIMITIVE_TYPES.includes(typeof node)) {
         element[html ? 'innerHTML' : 'innerText'] = node
       } else {
-        /** @type {Array<Component>} */
-        const nodes = (Array.isArray(node || EMPTY_LIST)
-          ? node || EMPTY_LIST
-          : [node]
-        ).filter((item) => typeof item !== 'number')
+        /** @type {Array<Component|any>} */
+        const nodes = []
+          .concat(node || EMPTY_LIST)
+          .filter((item) => typeof item !== 'number')
         const existingChildren = Array.from(element.children)
         existingChildren.forEach((child) => {
           const isNotPresent = !nodes.some(
@@ -116,20 +114,18 @@ export default function Component(tag, props) {
           }
         })
       }
-    })
-  } else {
-    if (PRIMITIVE_TYPES.includes(typeof children)) {
-      element[html ? 'innerHTML' : 'innerText'] = children
-    } else {
-      children.forEach((node) => {
-        setParent(node, this)
-      })
-    }
-  }
+    },
+    isSameChildren,
+  )
 }
 
 Component.prototype.bootstrap = bootstrap
+Component.prototype.node = node
 Component.build = build
+
+function node() {
+  return this[internalRef]
+}
 
 function build(tag, ns, children) {
   return factoryNode(
@@ -167,16 +163,10 @@ function bootstrap(root) {
 }
 
 /**
- * @typedef Component
- * @param {HTMLElement} [internalRef]
- * @param {Function(root: HTMLElement): HTMLElement} bootstrap
- * @property {Array<Component>} children
- */
-
-/**
- *
+ * Append element to parent
  * @param {Component} element
  * @param {Component} parent
+ * @returns {void}
  */
 function setParent(element, parent) {
   parent[internalRef].appendChild(element[internalRef])

@@ -1,15 +1,8 @@
 import ObservableState from '../ObservableState'
+import getRandomHash from './getRandomHash'
+import random from './random'
 
-function random(max) {
-  return (Math.floor(Math.random() * max) * 7) % max
-}
-
-const RandomPrefix = Array.from({ length: 100 }).map((_, index) =>
-  Array.from({ length: 10 })
-    .map((_, index) => String.fromCharCode((Math.random() * 100) % 100) + index)
-    .join('')
-    .replace(/[\W]/gi, ''),
-)
+const RandomPrefix = getRandomHash()
 
 const globalStyles = []
 const globalMarkup = document.createElement('style')
@@ -91,6 +84,17 @@ CSS.global = function global(style) {
     globalStyles[index] = style
     globalMarkup.innerHTML = globalStyles.join('\n\n')
   })
+}
+
+/**
+ * Refreshes animation on element
+ * @param  {HTMLElement} element
+ * @returns {void}
+ */
+CSS.refreshAnimation = function refreshAnimation(element) {
+  element.classList.remove('animating')
+  void element.offsetWidth
+  element.classList.add('animating')
 }
 
 CSS.animation = animation

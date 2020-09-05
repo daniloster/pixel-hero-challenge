@@ -4,8 +4,10 @@ class Subject {
   }
 
   next(value) {
-    this.subscribers.forEach((subscriber) => {
-      subscriber.next(value)
+    setTimeout(() => {
+      this.subscribers.forEach((subscriber) => {
+        subscriber.next(value)
+      })
     })
   }
 
@@ -23,12 +25,18 @@ class Subject {
 
 export default ObservableState
 
+/** @type {import("./types").ObservableState} */
 function ObservableState() {}
+
 ObservableState.prototype.get = () => null
 ObservableState.prototype.set = () => null
 ObservableState.prototype.subscribe = (subscriber) => () => null
-ObservableState.observe = observe
-ObservableState.observeTransform = observeTransform
+ObservableState.observe = (value, next) => observe(value, next, false)
+ObservableState.observeSync = (value, next, hash) => observe(value, next, hash)
+ObservableState.observeTransform = (observableChain, transform) =>
+  observeTransform(observableChain, transform, false)
+ObservableState.observeTransformSync = (observableChain, transform, hash) =>
+  observeTransform(observableChain, transform, hash)
 /**
  * @param {T} initialValue
  * @returns {import('@daniloster/i18n/lib/types').ObservableState<T>}
@@ -51,10 +59,32 @@ ObservableState.create = (initialValue) => {
   return observableState
 }
 
-function observe(value, next) {
+function isEqual(node, oldNode, hash) {
+  if (oldNode === undefined) {
+    return false
+  }
+
+  const nodes = [].concat(node)
+  const oldNodes = [].concat(oldNode)
+
+  const hashedNodes = !!hash && hash(nodes)
+  const hashedOldNodes = !!hash && hash(oldNodes)
+  const same =
+    nodes.length === oldNodes.length &&
+    hashedNodes !== '' &&
+    hashedOldNodes !== '' &&
+    hashedNodes === hashedOldNodes
+
+  console.log({ same, node, oldNode, hashedNodes, hashedOldNodes })
+  return same
+}
+
+function observe(value, next, hash) {
+  let oldValues = undefined
   const currentStates = []
   const subscribers = []
-  ;(Array.isArray(value) ? value : [value]).forEach((item, indexChain) => {
+  const values = Array.isArray(value) ? value : [value]
+  values.forEach((item, indexChain) => {
     /** @type {import("./types").ObservableState} */
     const observableCandidate = item
     const isObservable = observableCandidate instanceof ObservableState
@@ -69,8 +99,10 @@ function observe(value, next) {
             const newValues = currentStates.map((get, index) =>
               index === indexChain ? newValue : get(),
             )
-            // const transformCall = next || (() => newValues)
-            next(...newValues)
+            if (!hash || !isEqual(newValues, oldValues, hash)) {
+              next(...newValues)
+            }
+            oldValues = newValues
           },
         }),
       )
@@ -78,17 +110,20 @@ function observe(value, next) {
   })
   const stateValues = currentStates.map((get) => get())
 
-  // console.log({ stateValues })
   next(...stateValues)
 
   return () => subscribers.forEach(({ unsubscribe }) => unsubscribe())
 }
 
-function observeTransform(observableChain, transform) {
+function observeTransform(observableChain, transform, hash) {
   const observable = ObservableState.create(null)
-  observable.unsubscribe = observe(observableChain, (...values) => {
-    observable.set((old) => (transform || ((v) => v))(...values, old))
-  })
+  observable.unsubscribe = observe(
+    observableChain,
+    (...values) => {
+      observable.set((old) => (transform || ((v) => v))(...values, old))
+    },
+    hash,
+  )
 
   return observable
 }
