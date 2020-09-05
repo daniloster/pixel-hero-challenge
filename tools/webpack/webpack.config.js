@@ -40,7 +40,7 @@ module.exports = {
          */
         // test: /\.(png|jpg|jpeg|gif)$/i,
         // test: /^(.(?!(html|js|jsx|ts|tsx)))+$/i,
-        test: /^(.(?!(svelte|html|js|jsx|ts|tsx)))+$/i,
+        test: /^(.(?!(html|js|jsx|ts|tsx)))+$/i,
         use: [
           {
             loader: 'url-loader',
