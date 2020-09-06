@@ -1,16 +1,12 @@
+import factoryUUID from '../factoryUUID'
 import noop from '../noop'
 import ObservableState from '../ObservableState'
-import getRandomHash from './getRandomHash'
-import random from './random'
+import factoryLifecycle from './factoryLifecycle'
 import factoryAssignment from './reactive/factoryAssignment'
 import factoryAttrs from './reactive/factoryAttrs'
 import factoryClassList from './reactive/factoryClassList'
-import factoryEvents, {
-  DESTROY_EVENT_ID,
-  MOUNT_EVENT_ID,
-} from './reactive/factoryEvents'
+import factoryEvents from './reactive/factoryEvents'
 import factoryStyles from './reactive/factoryStyles'
-import walkThroughTree from './walkThroughTree'
 
 export const internalRef = Symbol('element')
 const EMPTY_LIST = []
@@ -18,7 +14,7 @@ const EMPTY_OBJECT = {}
 const PRIMITIVE_TYPES = ['string', 'number']
 const DATA_ITERATION_KEY = 'data-iteration-key'
 
-const RandomHash = getRandomHash()
+const uuid = factoryUUID()
 
 function isSameChildren(children) {
   return Array.isArray(children)
@@ -49,11 +45,7 @@ export default function Component(tag, props) {
     onDestroy = noop,
   } = props || EMPTY_OBJECT
   this.children = children
-  this.key =
-    key ||
-    `${RandomHash[random(100)]}-${RandomHash[random(100)]}-${random(
-      10000,
-    )}-${random(10000)}`
+  this.key = key || uuid()
   const create = ns
     ? (tag) => document.createElementNS(ns, tag)
     : (tag) => document.createElement(tag)
@@ -61,40 +53,20 @@ export default function Component(tag, props) {
   const element = (this[internalRef] = create(tag))
 
   if (key) element.setAttribute(DATA_ITERATION_KEY, key)
-
   if (className) factoryAssignment(element, 'className', className)
   factoryClassList(element, classList)
   factoryEvents(element, events)
   factoryAttrs(element, attrs, !!ns)
   factoryStyles(element, style)
+  factoryLifecycle(this, element, { onMount, onDestroy })
 
-  this.onMount = () => {
-    onMount()
-    // ...
-  }
-
-  this.onDestroy = () => {
-    onDestroy()
-    // ...
-  }
-
-  element.addEventListener(MOUNT_EVENT_ID, (e) => {
-    e.preventDefault()
-    walkThroughTree([this], (component) => component.onMount())
-  })
-
-  element.addEventListener(DESTROY_EVENT_ID, (e) => {
-    e.preventDefault()
-    walkThroughTree([this], (component) => component.onDestroy())
-  })
   ObservableState.observeSync(
     ObservableState.observeTransform([children]),
     (node) => {
-      console.log({ children: [].concat(node || EMPTY_LIST) })
       if (PRIMITIVE_TYPES.includes(typeof node)) {
         element[html ? 'innerHTML' : 'innerText'] = node
       } else {
-        /** @type {Array<Component|any>} */
+        /** @type {Array<import("../types").Component|any>} */
         const nodes = []
           .concat(node || EMPTY_LIST)
           .filter((item) => typeof item !== 'number')
@@ -167,8 +139,8 @@ function bootstrap(root) {
 
 /**
  * Append element to parent
- * @param {Component} element
- * @param {Component} parent
+ * @param {import("../types").Component} element
+ * @param {import("../types").Component} parent
  * @returns {void}
  */
 function setParent(element, parent) {

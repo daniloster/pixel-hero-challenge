@@ -75,7 +75,6 @@ function isEqual(node, oldNode, hash) {
     hashedOldNodes !== '' &&
     hashedNodes === hashedOldNodes
 
-  console.log({ same, node, oldNode, hashedNodes, hashedOldNodes })
   return same
 }
 
