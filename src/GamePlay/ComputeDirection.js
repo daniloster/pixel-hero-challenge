@@ -74,7 +74,9 @@ export function computeMovementX(mapState, player, direction) {
           }
         }
       }
-      return computeMovements(oldState, movements)
+      if (isMoveable || movements.length > 2) {
+        return computeMovements(oldState, movements)
+      }
     }
     return oldState
   })
@@ -119,7 +121,9 @@ export function computeMovementY(mapState, player, direction) {
           }
         }
       }
-      return computeMovements(oldState, movements)
+      if (isMoveable || movements.length > 2) {
+        return computeMovements(oldState, movements)
+      }
     }
     return oldState
   })
