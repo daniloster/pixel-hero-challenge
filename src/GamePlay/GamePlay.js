@@ -6,10 +6,10 @@ import GameState from './GameState'
 import getMapCopy from './getMapCopy'
 import Keys from './Keys'
 import processGameLoop from './processGameLoop'
-import GameFinished from './states/GameFinished'
-import GameOver from './states/GameOver'
-import GameRunning from './states/GameRunning'
-import Toolbar from './states/Toolbar'
+import GameFinished from './views/GameFinished'
+import GameOver from './views/GameOver'
+import GameRunning from './views/GameRunning'
+import Toolbar from './views/Toolbar'
 
 const FPS = 25
 const INTERVAL = 1000 / FPS
