@@ -1,5 +1,5 @@
 import { Dictionary } from '../MapEditor/Tilemap'
-import { ComputeDirection } from './computeMovement'
+import ComputeDirection from './ComputeDirection'
 import GameState from './GameState'
 import Keys from './Keys'
 import validateGameFinished from './validateGameFinished'
