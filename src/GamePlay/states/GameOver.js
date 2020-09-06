@@ -11,7 +11,7 @@ export default function GameOver({ state }) {
   return new Component('div', {
     className,
     classList: ObservableState.observeTransform(state, (value) => ({
-      active: value === GameState.GameOver,
+      active: value.includes(GameState.GameOver),
     })),
     children: [
       new Component('h3', {

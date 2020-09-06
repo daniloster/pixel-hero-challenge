@@ -1,3 +1,4 @@
+import noop from '../common/noop'
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
@@ -92,19 +93,11 @@ function processGameLoop(gameState, mapState, actions) {
       return
     }
 
-    if (action === Keys.Escape) {
-      gameState.set((old) =>
-        old
-          .filter((value) => value !== GameState.Paused)
-          .concat(GameState.Paused),
-      )
-    }
-
     const stackState = gameState.get()
     const currentState = stackState[stackState.length - 1]
     if (currentState === GameState.Running) {
       processGameAction(mapState, action)
-      validateGameFinished(gameState, mapState)
+      setTimeout(() => validateGameFinished(gameState, mapState))
     }
   })
 }
@@ -140,7 +133,7 @@ function processGameAction(mapState, action) {
 
 const className = new CSS('game-play')
 
-export default function GamePlay({ serialized, isMapEditor }) {
+export default function GamePlay({ serialized, isMapEditor, onExit = noop }) {
   const [state, map, restart] = useGameLoop(useGameMap(serialized))
   const component = new Component('div', {
     className,
@@ -148,7 +141,7 @@ export default function GamePlay({ serialized, isMapEditor }) {
       new GameFinished({ state, map, isMapEditor }),
       new GameOver({ state }),
       new GameRunning({ state, map }),
-      new Toolbar({ state }),
+      new Toolbar({ state, onExit }),
     ],
   })
   component.restart = restart

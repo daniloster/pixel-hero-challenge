@@ -16,7 +16,7 @@ className.scope('*:last-child', 'display: none;')
 className.modifier('.gameOver *:last-child', 'display: block;')
 className.modifier('.gameOver *:not(:last-child)', 'display: none;')
 
-export default function Toolbar({ state }) {
+export default function Toolbar({ state, onExit }) {
   return new Component('div', {
     className,
     classList: ObservableState.observeTransform(state, (value) => ({
@@ -28,7 +28,13 @@ export default function Toolbar({ state }) {
         children: 'Exit',
         events: {
           click: (e) => {
-            state.set(() => GameState.GameOver)
+            state.set((old) => {
+              if (old.includes(GameState.Succeed)) {
+                onExit()
+                return old
+              }
+              return [GameState.GameOver]
+            })
           },
         },
       }),

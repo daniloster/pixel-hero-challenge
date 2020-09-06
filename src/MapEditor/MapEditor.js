@@ -125,6 +125,9 @@ function MapSubmission({ tilemap }) {
   const gamePlay = new GamePlay({
     serialized: ObservableState.observeTransform(tilemap, serializeMap),
     isMapEditor: true,
+    onExit: () => {
+      modal.close()
+    },
   })
   const modal = new Modal({
     children: [
