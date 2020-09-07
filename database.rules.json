@@ -1,0 +1,50 @@
+{
+  "rules": {
+    ".read": "true",
+    "saved_maps": {
+      ".read": "true",
+      ".write": "((auth != null && data.val() == null) && newData.val() != null)",
+      "$map": {
+        ".read": "true",
+        ".write": "((auth != null && newData.val() != null) && (data.val() == null || newData.parent().parent().child('maps').child(data.child('key').val()).child('id').val() == null))"
+      }
+    },
+    "maps": {
+      ".read": "true",
+      ".write": "((auth != null && data.val() == null) && newData.val() != null)",
+      ".indexOn": [
+        "dimension",
+        "score",
+        "timestamp"
+      ],
+      "$id": {
+        ".validate": "newData.hasChildren(['uid', 'id', 'dimension', 'serialized', 'timestamp', 'score'])",
+        "uid": {
+          ".validate": "newData.isString()"
+        },
+        "id": {
+          ".validate": "newData.isString()"
+        },
+        "dimension": {
+          ".validate": "newData.isNumber()"
+        },
+        "serialized": {
+          ".validate": "newData.isString()"
+        },
+        "timestamp": {
+          ".validate": "newData.isNumber()"
+        },
+        "score": {
+          ".validate": "(newData.isNumber() && newData.isNumber())",
+          ".read": "auth != null",
+          ".write": "(auth != null && (data.val() != null || data.parent().val() == null))"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null",
+        ".write": "(((auth != null && data.val() == null) && newData.val() != null) && (newData.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('uid').val() == auth.uid && newData.child('id').val() == newData.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('key').val()))"
+      }
+    }
+  }
+}

@@ -17,6 +17,14 @@ module.exports = {
     __dirname: false,
     __filename: true,
   },
+  externals: {
+    firebase: {
+      root: 'firebase',
+    },
+    uuidv4: {
+      root: 'uuidv4',
+    },
+  },
   resolve: {
     alias: {
       'pixel-hero': path.resolve(__dirname, '../../src'),
@@ -106,6 +114,34 @@ module.exports = {
   </head>
   <body>
     <div id="root" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/uuidv4@6.2.3/build/lib/uuidv4.min.js"></script> -->
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDoH78xtW5v9LjWZaYnJpoFXg0YnXwf6lc",
+        authDomain: "pixel-hero-challenge.firebaseapp.com",
+        databaseURL: "https://pixel-hero-challenge.firebaseio.com",
+        projectId: "pixel-hero-challenge",
+        storageBucket: "pixel-hero-challenge.appspot.com",
+        messagingSenderId: "769505330951",
+        appId: "1:769505330951:web:32c8667c278225f6b827a2",
+        measurementId: "G-QRHTGL8ZT9"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
   </body>
 </html>
       `.trim(),

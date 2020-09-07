@@ -36,6 +36,7 @@ module.exports = {
     '@babel/polyfill',
     'full-icu',
     '@testing-library/jest-dom/extend-expect',
+    'window-crypto',
     '<rootDir>/tools/helpers/jest.setup.afterEnv.js',
   ],
   testMatch: [
