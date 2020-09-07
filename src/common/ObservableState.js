@@ -111,7 +111,9 @@ function observe(value, next, hash) {
 
   next(...stateValues)
 
-  return () => subscribers.forEach(({ unsubscribe }) => unsubscribe())
+  return {
+    unsubscribe: () => subscribers.forEach(({ unsubscribe }) => unsubscribe()),
+  }
 }
 
 function observeTransform(observableChain, transform, hash) {
