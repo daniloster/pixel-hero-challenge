@@ -1,3 +1,4 @@
+import ObservableState from '../ObservableState'
 import Component from '../ui/Component'
 
 export default function Link(props) {
@@ -5,7 +6,7 @@ export default function Link(props) {
     ...props,
     attrs: {
       ...props?.attrs,
-      href: `#${props.to}`,
+      href: ObservableState.observeTransform(props.to, (href) => `#${href}`),
     },
   })
 }

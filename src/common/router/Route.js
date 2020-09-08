@@ -21,7 +21,7 @@ function toRegExp(uri) {
         `You cannot have multiple parameters with same identification. e.g. "${param}"`,
       )
     }
-    path.replace(`{${param}}`, `(?<${param}>[^\/$]*)`)
+    path = path.replace(`{${param}}`, `(?<${param}>[^\\/$]*)`)
     paramKeys.push(param)
   }
   return [new RegExp(`${path}$`, 'gi'), paramKeys]
