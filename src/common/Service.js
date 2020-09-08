@@ -3,8 +3,8 @@ import { convertTileToToken, convertTokenToTile } from '../MapEditor/Tilemap'
 import uid from '../uid'
 import ObservableState from './ObservableState'
 
-const ROW_SEPARATOR = '|'
-const COLUMN_SEPARATOR = '+'
+const ROW_SEPARATOR = '+'
+const COLUMN_SEPARATOR = ''
 const CELL_SEPARATOR = ''
 const PAGE_SIZE = 10
 
@@ -21,24 +21,24 @@ function init(state) {
   })
 }
 
-function serializeMapAsId(map) {
+export function serializeMapAsId(map) {
   const tilemap = map || []
   return tilemap
     .map((columns) =>
       columns
-        .map((cells) => cells.map(convertTileToToken).join(CELL_SEPARATOR))
+        .map((cells) => convertTileToToken(cells.join(CELL_SEPARATOR)))
         .join(COLUMN_SEPARATOR),
     )
     .join(ROW_SEPARATOR)
 }
 
-function deserializeMapFromId(mapHashed) {
+export function deserializeMapFromId(mapHashed) {
   return mapHashed
     .split(ROW_SEPARATOR)
     .map((columns) =>
       columns
         .split(COLUMN_SEPARATOR)
-        .map((cells) => cells.split(CELL_SEPARATOR).map(convertTokenToTile)),
+        .map((cell) => [convertTokenToTile(Number(cell))]),
     )
 }
 
@@ -56,20 +56,22 @@ function saveMap(map) {
         firebase
           .database()
           .ref('saved_maps/' + serialized)
-          .set({ uid: uidValue, key })
+          .set({ uid: uidValue, key }, reject)
           .then(() => {
+            const data = {
+              uid: uidValue,
+              id: key,
+              dimension,
+              serialized,
+              score: 1,
+              timestamp: Date.now(),
+            }
+            console.log('SAVING DATA:', { data })
             firebase
               .database()
               .ref('maps/' + key)
-              .set({
-                uid: uidValue,
-                id: key,
-                dimension,
-                serialized,
-                score: 1,
-                timestamp: Date.now(),
-              })
-              .then(resolve)
+              .set(data)
+              .then(() => resolve(data))
               .catch(reject)
           })
           .catch(reject)
@@ -79,7 +81,7 @@ function saveMap(map) {
 }
 
 function syncCountMaps() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const unsubscriber = ObservableState.observe(uid, (uidValue) => {
       if (uidValue) {
         setTimeout(() => unsubscriber.unsubscribe())
@@ -87,11 +89,11 @@ function syncCountMaps() {
         firebase
           .database()
           .ref('maps')
-          .on('value')
-          .then((snapshot) => {
-            countMaps.set(() => snapshot.numChildren())
+          .on('value', (snapshot) => {
+            const count = snapshot.numChildren()
+            countMaps.set(() => count)
+            resolve(count)
           })
-          .catch(reject)
       }
     })
   })
@@ -106,23 +108,19 @@ function listMaps(page = 0, total) {
         firebase
           .database()
           .ref('maps')
-          // .endAt(page * PAGE_SIZE)
           .limitToLast(PAGE_SIZE)
-          .once('value')
-          .then((snapshot) => {
-            resolve(Object.values(snapshot.val()))
+          .once('value', (snapshot) => {
+            resolve(
+              Object.values(snapshot.val()).map((mapDefinition) => ({
+                ...mapDefinition,
+                tilemap: deserializeMapFromId(mapDefinition.serialized),
+              })),
+            )
           })
-          .catch(reject)
       }
     })
   })
 }
-
-//   [
-//     [['None'], ['RescuableBlock'], ['RescuePoint']],
-//     [['None'], ['Player'], ['None']],
-//     [['None'], ['MoveableBlock'], ['None']],
-//   ]
 
 export default {
   init,
