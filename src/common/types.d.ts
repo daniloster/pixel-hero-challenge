@@ -75,3 +75,51 @@ export interface Modal {
   open: () => void
   close: () => void
 }
+
+export interface ColumnDefinition {
+  content: ({ rowData, sortedBy }) => string | Component
+  head: ({ sortedBy }) => string | Component
+}
+
+export interface ColumnRendererProps {
+  rowData: any
+  sortedBy: ObservableState<string>
+  contentRendererIndex: 'content' | 'head'
+}
+
+export interface RowRendererProps {
+  rowData: any
+  index: number
+  columns: ColumnDefinition[]
+  columnRenderer: (props: ColumnRendererProps) => Component
+  contentRendererIndex: 'content' | 'head'
+  sortedBy: ObservableState<string>
+  onSort: () => void
+  defaultWidth?: number
+}
+
+export interface CellRendererProps {
+  rowData?: any
+  index: number
+  column: ColumnDefinition
+  columnRenderer: (props: ColumnRendererProps) => Component
+  contentRendererIndex: 'content' | 'head'
+  sortedBy: ObservableState<string>
+  onSort: () => void
+  defaultWidth?: number
+  rowRenderer: (props: RowRendererProps) => Component
+}
+
+export interface GridProps {
+  data: any[]
+  columns: ColumnDefinition[]
+  borderWidth?: number
+  borderColor?: string
+  borderHighlightColor?: string
+  cellColor?: string
+  cellHighlightColor?: string
+  initialSortedById?: string
+  rowRenderer: (props: RowRendererProps) => Component
+  cellRenderer: (props: CellRendererProps) => Component
+  defaultWidth?: number
+}

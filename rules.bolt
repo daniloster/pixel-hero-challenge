@@ -1,7 +1,7 @@
 path / {
-  read() { true }
+  read() { auth != null }
+  write() { auth != null && prior(this) == null && this != null }
 }
-
 path /saved_maps {
   read() { true }
   write() { auth != null && prior(this) == null && this != null }
@@ -9,7 +9,7 @@ path /saved_maps {
 
 path /saved_maps/{map} {
   read() { true }
-  write() { auth != null && this != null && (prior(this) == null || isNewSavedMap(prior(this), map)) }
+  write() { auth != null && prior(this) == null && this != null }
 }
 
 path /maps {
@@ -20,7 +20,7 @@ path /maps {
 
 path /maps/{id} is MapSerialized {
   read() { auth != null }
-  write() { auth != null && prior(this) == null && this != null && isNewMap(this) }
+  write() { auth != null && prior(this) == null && this != null && isNewMap(prior(this), this) }
 }
 
 path /maps/{id}/score is Number {
@@ -38,9 +38,9 @@ type MapSerialized {
 }
 
 isNewSavedMap(oldData, map) {
-  root.maps[oldData.key].id == null
+  oldData.key != null && root.maps[oldData.key].id == null
 }
 
-isNewMap(newData) {
-  root.saved_maps[newData.serialized].uid == auth.uid && newData.id == root.saved_maps[newData.serialized].key
+isNewMap(oldData, newData) {
+  oldData.parent().parent().saved_maps[newData.serialized].uid == auth.uid && newData.id == oldData.parent().parent().saved_maps[newData.serialized].key
 }

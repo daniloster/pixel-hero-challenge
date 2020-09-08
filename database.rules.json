@@ -1,12 +1,13 @@
 {
   "rules": {
-    ".read": "true",
+    ".read": "auth != null",
+    ".write": "((auth != null && data.val() == null) && newData.val() != null)",
     "saved_maps": {
       ".read": "true",
       ".write": "((auth != null && data.val() == null) && newData.val() != null)",
       "$map": {
         ".read": "true",
-        ".write": "((auth != null && newData.val() != null) && (data.val() == null || newData.parent().parent().child('maps').child(data.child('key').val()).child('id').val() == null))"
+        ".write": "((auth != null && data.val() == null) && newData.val() != null)"
       }
     },
     "maps": {
@@ -43,7 +44,7 @@
           ".validate": "false"
         },
         ".read": "auth != null",
-        ".write": "(((auth != null && data.val() == null) && newData.val() != null) && (newData.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('uid').val() == auth.uid && newData.child('id').val() == newData.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('key').val()))"
+        ".write": "(((auth != null && data.val() == null) && newData.val() != null) && (data.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('uid').val() == auth.uid && newData.child('id').val() == data.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('key').val()))"
       }
     }
   }

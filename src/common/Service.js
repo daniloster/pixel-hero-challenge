@@ -56,8 +56,12 @@ function saveMap(map) {
         firebase
           .database()
           .ref('saved_maps/' + serialized)
-          .set({ uid: uidValue, key }, reject)
-          .then(() => {
+          .set({ uid: uidValue, key }, (error) => {
+            if (error) {
+              console.log({ error, first: true })
+              return reject(error)
+            }
+
             const data = {
               uid: uidValue,
               id: key,
@@ -70,11 +74,15 @@ function saveMap(map) {
             firebase
               .database()
               .ref('maps/' + key)
-              .set(data)
-              .then(() => resolve(data))
-              .catch(reject)
+              .set(data, (error) => {
+                if (error) {
+                  console.log({ error, first: true })
+                  return reject(error)
+                }
+                console.log('SAVED')
+                resolve(data)
+              })
           })
-          .catch(reject)
       }
     })
   })
