@@ -4,16 +4,8 @@ import Route from './Route'
 import routerState from './routerState'
 
 window.addEventListener('popstate', (event) => {
-  console.log({
-    event,
-    href: location.href,
-    pathname: location.pathname,
-    hash: location.hash,
-    qs: location.search,
-  })
   const { isSynthetic, path } = event.state || {}
   const { hash } = location
-  event.stopImmediatePropagation()
   routerState.set(() => (isSynthetic ? '/#' + path : hash))
 })
 

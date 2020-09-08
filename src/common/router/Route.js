@@ -24,7 +24,7 @@ function toRegExp(uri) {
     path.replace(`{${param}}`, `(?<${param}>[^\/$]*)`)
     paramKeys.push(param)
   }
-  return [new RegExp(`${path}`, 'gi'), paramKeys]
+  return [new RegExp(`${path}$`, 'gi'), paramKeys]
 }
 
 /**
@@ -41,7 +41,6 @@ function toParams(currentPath, path) {
   const params = {}
   while ((group = groups.next()).value && !group.done) {
     const paramKey = paramKeys[index]
-    console.log({ paramKey, group })
     if (paramKey) {
       const paramValue = group.value.groups[paramKey]
       params[paramKeys] = paramValue
