@@ -37,6 +37,7 @@ classNameProof.scope(
   `,
 )
 const className = new CSS('map-editor')
+className.scope('.proof-button', 'padding: 0.5rem;')
 className.scope(
   'h2',
   `
@@ -171,6 +172,7 @@ function MapSubmission({ tilemap }) {
       new Component('h3', { children: 'Validations' }),
       new ValidationMessages({ messages }),
       new Component('button', {
+        className: 'proof-button',
         attrs: { type: 'button', disabled },
         events: {
           /**

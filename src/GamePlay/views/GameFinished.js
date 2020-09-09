@@ -24,6 +24,7 @@ className.scope(
   '.share-url',
   'word-break: keep-all; white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis; display: none;',
 )
+className.scope('button', 'padding: 0.5rem;')
 
 export default function GameFinished({
   state,
