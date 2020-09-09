@@ -6,10 +6,10 @@ import GameState from './GameState'
 import getMapCopy from './getMapCopy'
 import Keys from './Keys'
 import processGameLoop from './processGameLoop'
+import Exit from './views/Exit'
 import GameFinished from './views/GameFinished'
 import GameOver from './views/GameOver'
 import GameRunning from './views/GameRunning'
-import Toolbar from './views/Toolbar'
 
 const FPS = 25
 const INTERVAL = 1000 / FPS
@@ -71,6 +71,7 @@ function useGameLoop(map) {
 }
 
 const className = new CSS('game-play')
+className.scope('position: relative;')
 
 /**
  * GamePlay component
@@ -90,7 +91,7 @@ export default function GamePlay({
       new GameOver({ state }),
       new GameRunning({ viewport, state, map }),
       // new Joystick({ joystick, state }),
-      new Toolbar({ state, onExit }),
+      new Exit({ state, onExit }),
     ],
   })
   component.restart = restart
