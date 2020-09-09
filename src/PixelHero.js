@@ -98,6 +98,10 @@ export default function PixelHero() {
       (newState) => `${className} ${newState}`,
     ),
     children: [
+      new Component('div', {
+        children: '<span style="font-size: 0.1rem;">v0.3</span>',
+        html: true,
+      }),
       new Component('h1', { children: 'Pixel Hero' }),
       new Component('div', {
         className: 'game',

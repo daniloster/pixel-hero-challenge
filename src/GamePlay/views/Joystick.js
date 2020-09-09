@@ -10,6 +10,7 @@ className.scope(`
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 20;
   --unit: 30px;
   display: flex;
   align-items: center;
