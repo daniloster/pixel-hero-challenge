@@ -44,11 +44,20 @@ export default function GamePlayById({ id }) {
     children: ObservableState.observeTransformSync(map, (mapValue) => {
       if (mapValue) {
         const gamePlay = new GamePlay({
+          viewport: {
+            width: () => window.innerWidth,
+            height: () => {
+              console.log({
+                height: window.innerHeight,
+                top: gamePlay.node().offsetTop,
+              })
+              return window.innerHeight - gamePlay.node().offsetTop * 2
+            },
+          },
           serialized: ObservableState.observeTransform(
             [mapValue],
             serializeMap,
           ),
-          isCompact: false,
           isMapEditor: false,
           onExit: () => {
             gamePlay.restart()

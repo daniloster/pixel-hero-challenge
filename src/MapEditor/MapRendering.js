@@ -2,6 +2,7 @@ import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
 import { UNIT_SIZE } from '../common/units'
+import GameState from '../GamePlay/GameState'
 import MoveableBox from './tile/MoveableBox'
 import Player from './tile/Player'
 import RescuableBox from './tile/RescuableBox'
@@ -33,42 +34,28 @@ const INITIAL_TILEMAP = [[[]]]
 
 /**
  *
- * @param {{ target: HTMLElement }} params
+ * @param {{ target: HTMLElement, viewport: import('../common/types').Viewport }} params
  */
-function defaultUnit({ target }) {
+function defaultUnit({ target, viewport }) {
   const columns = Number(target.getAttribute('data-columns')) + 1
   const rows = Number(target.getAttribute('data-rows')) + 1
-  const stretch = target.getAttribute('data-compact') === 'false'
-  const winWidth = document.body.offsetWidth - 300
-  const winHeight = document.body.offsetHeight - 300
-  const width =
-    target.offsetWidth > winWidth || stretch ? winWidth : target.offsetWidth
-  const height =
-    target.offsetHeight > winHeight || stretch ? winHeight : target.offsetHeight
+  const width = viewport.width()
+  const height = viewport.height()
   const unitW = Math.floor(width / columns)
   const unitH = Math.floor(height / rows)
-  // console.log({
-  //   unitH,
-  //   unitW,
-  //   width,
-  //   height,
-  //   stretch,
-  //   compact: target.getAttribute('data-compact'),
-  // })
   const unit = Math.min(unitW, unitH)
   if (unit > 0) {
-    if (stretch) {
-      target.width = columns * unit
-      target.height = rows * unit
-    }
+    target.width = columns * unit
+    target.height = rows * unit
     target.style.setProperty('--unitSize', unit)
   }
 }
 
 export default function MapRendering({
-  isCompact = true,
+  viewport,
   columns,
   rows,
+  state,
   tilemap,
   unit = defaultUnit,
 }) {
@@ -103,18 +90,17 @@ export default function MapRendering({
   const _columns = ObservableState.observeTransform(columns)
   const _rows = ObservableState.observeTransform(rows)
 
-  return new Component('div', {
+  const component = new Component('div', {
     className,
     attrs: {
       'data-columns': _columns,
       'data-rows': _rows,
-      'data-compact': isCompact,
     },
     style: {
       '--columns': _columns,
       '--rows': _rows,
     },
-    onResize: unit,
+    onResize: (view) => unit({ ...view, viewport }),
     children: [
       new Component('div', {
         className: 'MapArea',
@@ -126,6 +112,16 @@ export default function MapRendering({
       }),
     ],
   })
+
+  if (state) {
+    ObservableState.observeTransform(state, (stateValues) => {
+      if (stateValues.includes(GameState.Running)) {
+        unit({ target: component.node(), viewport })
+      }
+    })
+  }
+
+  return component
 }
 
 const classNameTile = new CSS('tile')

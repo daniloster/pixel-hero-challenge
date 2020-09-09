@@ -10,23 +10,25 @@ import walkThroughTree from './walkThroughTree'
  */
 export default function factoryLifecycle(self, element, hooks) {
   const { onMount, onDestroy } = hooks
-  self.onMount = () => {
-    onMount()
+  const mount = (component) => {
+    // console.log('component mounting', { component, key: component.key })
+    onMount(component)
     element.removeEventListener(MOUNT_EVENT_ID, mountHandler)
     // ...
   }
-  self.onDestroy = () => {
-    onDestroy()
+  const destroy = (component) => {
+    // console.log('component destroying', { component, key: component.key })
+    onDestroy(component)
     element.removeEventListener(DESTROY_EVENT_ID, destroyHandler)
     // ...
   }
   const mountHandler = (e) => {
     e.preventDefault()
-    walkThroughTree([self], (component) => component.onMount())
+    walkThroughTree([self], mount)
   }
   const destroyHandler = (e) => {
     e.preventDefault()
-    walkThroughTree([self], (component) => component.onDestroy())
+    walkThroughTree([self], destroy)
   }
 
   element.addEventListener(MOUNT_EVENT_ID, mountHandler)

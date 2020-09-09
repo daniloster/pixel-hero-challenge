@@ -1,4 +1,5 @@
 import isNotNumber from '../isNotNumber'
+import ObservableState from '../ObservableState'
 
 /**
  *
@@ -12,7 +13,12 @@ export default function walkThroughTree(components, call) {
   const iterate = components.filter(isNotNumber)
   let item = null
   while ((item = iterate.shift())) {
-    walkThroughTree(item.children, call)
+    walkThroughTree(
+      item.children instanceof ObservableState
+        ? item.children.get()
+        : item.children,
+      call,
+    )
     call(item)
   }
 }

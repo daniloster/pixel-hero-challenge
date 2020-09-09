@@ -4,6 +4,8 @@ import CSS from '../ui/CSS'
 
 const className = new CSS('grid')
 className.scope('--border-width: 0;')
+className.scope('--row-width: 100%;')
+className.scope('--row-max-width: unset;')
 className.scope('overflow: auto;')
 className.scope(
   '.grid-wrapper-row',
@@ -11,6 +13,8 @@ className.scope(
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  width: var(--row-width);
+  max-width: var(--row-max-width);
 `,
 )
 className.scope(
@@ -82,6 +86,8 @@ export default function Grid(props) {
     borderHighlightColor = 'transparent',
     cellColor = 'transparent',
     cellHighlightColor = 'transparent',
+    rowWidth = null,
+    rowMaxWidth = null,
     initialSortedById = null,
     rowRenderer = defaultRowRenderer,
     cellRenderer = defaultCellRenderer,
@@ -114,6 +120,8 @@ export default function Grid(props) {
       '--border-highlight-color': borderHighlightColor,
       '--cell-color': cellColor,
       '--cell-highlight-color': cellHighlightColor,
+      ...(rowWidth === null && { '--row-width': rowWidth }),
+      ...(rowMaxWidth === null && { '--row-max-width': rowMaxWidth }),
     },
     children: [
       new Headers({ columns, columnRenderer }),

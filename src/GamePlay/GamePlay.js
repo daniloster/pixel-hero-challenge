@@ -60,24 +60,36 @@ function useGameLoop(map) {
     }
   })
 
-  return [gameState, mapState, restart]
+  const joystick = {
+    top: () => (actions.ArrowTop = true),
+    right: () => (actions.ArrowRight = true),
+    bottom: () => (actions.ArrowBottom = true),
+    left: () => (actions.ArrowLeft = true),
+  }
+
+  return [gameState, mapState, restart, joystick]
 }
 
 const className = new CSS('game-play')
 
+/**
+ * GamePlay component
+ * @param {import('../common/types').GamePlayProps} props
+ */
 export default function GamePlay({
+  viewport,
   serialized,
-  isCompact = true,
   isMapEditor,
   onExit = noop,
 }) {
-  const [state, map, restart] = useGameLoop(useGameMap(serialized))
+  const [state, map, restart, joystick] = useGameLoop(useGameMap(serialized))
   const component = new Component('div', {
     className,
     children: [
       new GameFinished({ state, serialized, isMapEditor }),
       new GameOver({ state }),
-      new GameRunning({ isCompact, state, map }),
+      new GameRunning({ viewport, state, map }),
+      // new Joystick({ joystick, state }),
       new Toolbar({ state, onExit }),
     ],
   })

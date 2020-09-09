@@ -24,9 +24,6 @@ function getBounds(rowData) {
       'max-height': height,
       position: 'relative',
     },
-    // onResize: ({ target }) => {
-    //   console.log({ target })
-    // },
   }
 }
 
@@ -51,6 +48,7 @@ export default function ListingMaps() {
       }),
       new Grid({
         data,
+        rowMaxWidth: '50%',
         columns: [
           {
             content: ({ rowData }) => rowData.dimension.toString(),
@@ -79,6 +77,10 @@ export default function ListingMaps() {
                     tilemap: [rowData.tilemap],
                     columns: (rowData.tilemap[0] || EMPTY_LIST).length,
                     rows: rowData.tilemap.length,
+                    viewport: {
+                      width: () => 100,
+                      height: () => 100,
+                    },
                   }),
                 ],
               }),

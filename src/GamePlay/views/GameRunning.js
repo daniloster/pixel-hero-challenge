@@ -9,6 +9,7 @@ const className = new CSS('game-running')
 className.modifier('.initial', 'display: flex;')
 className.modifier('.running', 'display: flex;')
 className.scope(`
+  position: relative;
   display: none;
   
   align-items: stretch;
@@ -21,14 +22,13 @@ className.scope(`
   flex-direction: column;
   flex-wrap: wrap;
 `)
+className.scope('.rendering-wrapper', 'display: block;')
 className.scope(
-  '.rendering-wrapper',
-  `
-  display: block;
-`,
+  '.splash-screen',
+  'position: absolute; top: 0; right: 0; bottom: 0; left: 0;',
 )
 
-export default function GameRunning({ isCompact, state, map }) {
+export default function GameRunning({ viewport, state, map }) {
   const columns = ObservableState.observeTransform(
     map,
     ({ columns }) => columns,
@@ -70,7 +70,9 @@ export default function GameRunning({ isCompact, state, map }) {
     children: [
       new Component('div', {
         className: 'rendering-wrapper',
-        children: [new MapRendering({ isCompact, tilemap, rows, columns })],
+        children: [
+          new MapRendering({ tilemap, rows, columns, viewport, state }),
+        ],
       }),
       new Component('div', {
         className: 'rendering-wrapper',

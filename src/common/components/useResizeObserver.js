@@ -24,6 +24,8 @@ function subscribe(element, listener) {
   resizeListeners.set((old) => [...old, [element, listener]])
   resizeObserver.observe(element)
 
+  setTimeout(() => listener({ target: element }))
+
   return {
     unsubscribe: () => {
       resizeObserver.unobserve(element)

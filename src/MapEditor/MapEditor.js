@@ -142,21 +142,24 @@ function MapSubmission({ tilemap }) {
     toValidationMessages,
   )
   const disabled = ObservableState.observeTransform(messages, isButtonDisabled)
+  const gameViewport = {
+    width: () => modalContent.node().offsetWidth,
+    height: () => modalContent.node().offsetHeight - 60,
+  }
   const gamePlay = new GamePlay({
     serialized: ObservableState.observeTransform(tilemap, serializeMap),
     isMapEditor: true,
-    isCompact: false,
     onExit: () => {
       modal.close()
     },
+    viewport: gameViewport,
+  })
+  const modalContent = new Component('div', {
+    children: [gamePlay],
   })
   const modal = new Modal({
     className: classNameProof,
-    children: [
-      new Component('div', {
-        children: [gamePlay],
-      }),
-    ],
+    children: [modalContent],
     onOpen: () => {
       gamePlay.restart()
     },
@@ -198,7 +201,15 @@ function MapOverview({ tilemap, columns, rows }) {
     className: 'MapEditorItem',
     children: [
       new Component('h3', { children: 'Map Overview' }),
-      new MapRendering({ tilemap, columns, rows }),
+      new MapRendering({
+        tilemap,
+        columns,
+        rows,
+        viewport: {
+          width: () => window.innerWidth / 2 - 32,
+          height: () => window.innerHeight * 0.4,
+        },
+      }),
     ],
   })
 }

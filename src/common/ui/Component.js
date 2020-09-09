@@ -60,8 +60,8 @@ export default function Component(tag, props) {
   let onDestroyHandler = onDestroy
   if (onResize) {
     const { unsubscribe } = useResizeObserver(element, onResize)
-    onDestroyHandler = (...args) => {
-      onDestroy(...args)
+    onDestroyHandler = (argComponent) => {
+      onDestroy(argComponent)
       unsubscribe()
     }
   }
@@ -70,8 +70,8 @@ export default function Component(tag, props) {
   factoryAttrs(element, attrs, !!ns)
   factoryStyles(element, style)
   factoryLifecycle(this, element, {
-    onMount,
-    onDestroy: onDestroyHandler,
+    onMount: (component) => onMount(component),
+    onDestroy: (component) => onDestroyHandler(component),
   })
 
   ObservableState.observe(

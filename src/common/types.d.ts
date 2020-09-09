@@ -126,3 +126,15 @@ export interface GridProps {
   cellRenderer: (props: CellRendererProps) => Component
   defaultWidth?: number
 }
+
+export interface Viewport {
+  height: () => number
+  width: () => number
+}
+
+export interface GamePlayProps {
+  viewport: Viewport
+  serialized: string | ObservableState<string>
+  isMapEditor?: boolean
+  onExit?: () => void
+}

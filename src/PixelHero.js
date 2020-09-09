@@ -70,6 +70,13 @@ CSS.animation('modal-out')
   .step('100%', 'transform: scale(0.1); opacity: 0;')
   .build()
 
+CSS.global(`
+    html, body {
+      overflow-y: hidden;
+      max-height: 100vh;
+    }
+`)
+
 const className = new CSS('pixel-hero')
 className.modifier('.loaded .loading', 'display: none;')
 className.modifier('.loaded .game', 'display: block;')
