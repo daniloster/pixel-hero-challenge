@@ -130,9 +130,31 @@ function listMaps(page = 0, total) {
   })
 }
 
+function getMap(id) {
+  return new Promise((resolve, reject) => {
+    const unsubscriber = ObservableState.observe(uid, (uidValue) => {
+      if (uidValue) {
+        setTimeout(() => unsubscriber.unsubscribe())
+
+        firebase
+          .database()
+          .ref('maps/' + id)
+          .once('value', (snapshot) => {
+            const map = snapshot.val()
+            resolve({
+              ...map,
+              tilemap: deserializeMapFromId(map.serialized),
+            })
+          })
+      }
+    })
+  })
+}
+
 export default {
   init,
   syncCountMaps,
+  getMap,
   listMaps,
   saveMap,
 }
