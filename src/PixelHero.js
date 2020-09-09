@@ -72,7 +72,6 @@ CSS.animation('modal-out')
 
 CSS.global(`
     html, body {
-      overflow-y: hidden;
       max-height: 100vh;
     }
 `)
@@ -99,7 +98,7 @@ export default function PixelHero() {
     ),
     children: [
       new Component('div', {
-        children: '<span style="font-size: 0.1rem;">v0.4</span>',
+        children: '<span style="font-size: 0.2rem;">v0.5</span>',
         html: true,
       }),
       new Component('h1', { children: 'Pixel Hero' }),

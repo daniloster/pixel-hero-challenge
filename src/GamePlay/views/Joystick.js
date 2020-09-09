@@ -12,14 +12,13 @@ className.scope(`
   right: 0;
   z-index: 20;
   --unit: 30px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  opacity: 0;
-  transition: opacity 250ms ease-in;
+  opacity: 0.4;
 `)
-className.modifier('.is-active', 'opacity: 0.4;')
+className.modifier('.is-active', 'display: flex;')
 className.scope('> *', 'box-sizing: border-box;')
 className.scope('> div', 'position: relative; width: 30vw; height: 30vh;')
 className.scope(

@@ -68,6 +68,7 @@ export default function ListingMaps() {
             content: ({ rowData }) =>
               new Link({ to: `/challenge/${rowData.id}`, children: 'Play' }),
             head: () => 'Play',
+            width: 60,
           },
           {
             content: ({ rowData }) =>

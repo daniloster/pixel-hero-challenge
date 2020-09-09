@@ -26,13 +26,15 @@ export default function Exit({ state, onExit }) {
     html: true,
     events: {
       click: (e) => {
-        setTimeout(() =>
-          state.set((old) => {
-            if (old.includes(GameState.Succeed)) {
-              return old
-            }
-            return [GameState.GameOver]
-          }),
+        setTimeout(
+          () =>
+            state.set((old) => {
+              if (old.includes(GameState.Succeed)) {
+                return old
+              }
+              return [GameState.GameOver]
+            }),
+          500,
         )
         onExit()
       },

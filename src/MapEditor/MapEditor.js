@@ -150,12 +150,13 @@ function MapSubmission({ tilemap }) {
     serialized: ObservableState.observeTransform(tilemap, serializeMap),
     isMapEditor: true,
     onExit: () => {
-      modal.close()
+      setTimeout(() => modal.close())
     },
     viewport: gameViewport,
   })
   const modalContent = new Component('div', {
     children: [gamePlay],
+    style: { 'padding-top': '2.5rem' },
   })
   const modal = new Modal({
     className: classNameProof,

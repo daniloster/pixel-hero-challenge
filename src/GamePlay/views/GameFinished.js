@@ -25,7 +25,12 @@ className.scope(
   'word-break: keep-all; white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis; display: none;',
 )
 
-export default function GameFinished({ state, serialized, isMapEditor }) {
+export default function GameFinished({
+  state,
+  serialized,
+  isMapEditor,
+  onExit,
+}) {
   const errorMessage = ObservableState.create('')
   const url = ObservableState.create('')
 
@@ -117,6 +122,9 @@ export default function GameFinished({ state, serialized, isMapEditor }) {
                   url,
                   (urlText) => `${location.origin}/#${urlText}`,
                 ),
+                events: {
+                  click: onExit,
+                },
               }),
             ],
           }),

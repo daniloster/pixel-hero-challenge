@@ -88,7 +88,7 @@ export default function GamePlay({
   const component = new Component('div', {
     className,
     children: [
-      new GameFinished({ state, serialized, isMapEditor }),
+      new GameFinished({ state, serialized, isMapEditor, onExit }),
       new GameOver({ state }),
       new GameRunning({ viewport, state, map }),
       new Joystick({ joystick, state }),
