@@ -99,7 +99,7 @@ export default function PixelHero() {
     ),
     children: [
       new Component('div', {
-        children: '<span style="font-size: 0.1rem;">v0.3</span>',
+        children: '<span style="font-size: 0.1rem;">v0.4</span>',
         html: true,
       }),
       new Component('h1', { children: 'Pixel Hero' }),
