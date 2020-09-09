@@ -13,7 +13,7 @@ export default function factoryAttrs(element, attrs, withNamespace) {
   Object.entries(attrs).forEach(([attribute, value]) => {
     subscribers.push(
       ObservableState.observe(value, (newValue) => {
-        if (TOGGLE_ATTRS.includes(attribute)) {
+        if (TOGGLE_ATTRS.includes(attribute) || value instanceof Boolean) {
           if (newValue) {
             setAttribute(attribute, newValue)
           } else {

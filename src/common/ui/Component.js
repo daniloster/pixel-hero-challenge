@@ -1,4 +1,6 @@
+import useResizeObserver from '../components/useResizeObserver'
 import factoryUUID from '../factoryUUID'
+import isNotNumber from '../isNotNumber'
 import noop from '../noop'
 import ObservableState from '../ObservableState'
 import factoryLifecycle from './factoryLifecycle'
@@ -19,8 +21,8 @@ const uuid = factoryUUID()
 function isSameChildren(children) {
   return Array.isArray(children)
     ? children
+        .filter((item) => isNotNumber(item) && item?.key)
         .map(({ key }) => key)
-        .filter((key) => !!key)
         .join('|')
     : children
 }
@@ -43,6 +45,7 @@ export default function Component(tag, props) {
     ns,
     onMount = noop,
     onDestroy = noop,
+    onResize = null,
   } = props || EMPTY_OBJECT
   this.children = children
   this.key = key || uuid()
@@ -54,11 +57,22 @@ export default function Component(tag, props) {
 
   if (key) element.setAttribute(DATA_ITERATION_KEY, key)
   if (className) factoryAssignment(element, 'className', className)
+  let onDestroyHandler = onDestroy
+  if (onResize) {
+    const { unsubscribe } = useResizeObserver(element, onResize)
+    onDestroyHandler = (...args) => {
+      onDestroy(...args)
+      unsubscribe()
+    }
+  }
   factoryClassList(element, classList)
   factoryEvents(element, events)
   factoryAttrs(element, attrs, !!ns)
   factoryStyles(element, style)
-  factoryLifecycle(this, element, { onMount, onDestroy })
+  factoryLifecycle(this, element, {
+    onMount,
+    onDestroy: onDestroyHandler,
+  })
 
   ObservableState.observeSync(
     ObservableState.observeTransform([children]),
@@ -66,6 +80,7 @@ export default function Component(tag, props) {
       if (PRIMITIVE_TYPES.includes(typeof node)) {
         element[html ? 'innerHTML' : 'innerText'] = node
       } else {
+        this.children = node
         /** @type {Array<import("../types").Component|any>} */
         const nodes = []
           .concat(node || EMPTY_LIST)
