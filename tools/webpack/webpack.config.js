@@ -111,6 +111,7 @@ module.exports = {
         box-sizing: border-box;
       }
     </style>
+    <meta name="viewport" content="width=device-width">
   </head>
   <body>
     <div id="root" />
