@@ -74,8 +74,12 @@ export default function Component(tag, props) {
     onDestroy: onDestroyHandler,
   })
 
-  ObservableState.observeSync(
-    ObservableState.observeTransform([children]),
+  ObservableState.observe(
+    ObservableState.observeTransformSync(
+      [children],
+      (nodes) => nodes,
+      isSameChildren,
+    ),
     (node) => {
       if (PRIMITIVE_TYPES.includes(typeof node)) {
         element[html ? 'innerHTML' : 'innerText'] = node
@@ -94,18 +98,21 @@ export default function Component(tag, props) {
             child.parentNode.removeChild(child)
           }
         })
-        if (!nodes.forEach) debugger
-        nodes.forEach((node) => {
+
+        nodes.forEach((/** @type {Component} */ node, nodeIndex) => {
           const isNotPresent = !existingChildren.some(
             (child) => node.key === child.getAttribute(DATA_ITERATION_KEY),
           )
           if (isNotPresent) {
-            setParent(node, this)
+            if (nodeIndex > element.children.length) {
+              element.appendChild(node.node())
+            } else {
+              element.insertBefore(node.node(), element.children[nodeIndex])
+            }
           }
         })
       }
     },
-    isSameChildren,
   )
 }
 

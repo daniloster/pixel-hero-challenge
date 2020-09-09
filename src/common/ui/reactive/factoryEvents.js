@@ -11,7 +11,6 @@ document.addEventListener('DOMNodeRemoved', (e) => {
 document.addEventListener('DOMNodeInserted', (e) => {
   /** @type {HTMLElement} */
   const target = e.target
-  // console.log('ADD', e.target)
   target.dispatchEvent(new CustomEvent(MOUNT_EVENT_ID, { bubbles: false }))
 })
 

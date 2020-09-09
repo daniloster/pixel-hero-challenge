@@ -3,7 +3,6 @@ import Modal from '../common/components/Modal'
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
-import { MAX_COLUMNS, MAX_ROWS } from '../common/units'
 import GamePlay from '../GamePlay/GamePlay'
 import MapDimension from './MapDimension'
 import MapInput from './MapInput'
@@ -73,7 +72,7 @@ export default function MapEditor() {
     {
       columns: 3,
       rows: 3,
-      tilemap: factoryTilemap(MAX_ROWS, MAX_COLUMNS),
+      tilemap: factoryTilemap(3, 3),
     },
   ])
   const mapDimensionActions = {
@@ -81,19 +80,21 @@ export default function MapEditor() {
       observableState.set((old) => ({
         ...old,
         columns: Number(e.target.value),
+        tilemap: factoryTilemap(old.rows, Number(e.target.value)),
       })),
     onChangeRows: (e) =>
       observableState.set((old) => ({
         ...old,
         rows: Number(e.target.value),
+        tilemap: factoryTilemap(Number(e.target.value), old.columns),
       })),
   }
   const tilemapActions = {
     setTilemap: ({ rowIndex, columnIndex, value }) =>
       observableState.set((old) => ({
         ...old,
-        tilemap: old.tilemap.map((cells, currentRowIndex) =>
-          cells.map((cell, currentColumnIndex) => {
+        tilemap: old.tilemap.map((columns, currentRowIndex) =>
+          columns.map((cell, currentColumnIndex) => {
             if (
               currentColumnIndex === columnIndex &&
               currentRowIndex == rowIndex
@@ -114,13 +115,9 @@ export default function MapEditor() {
     observableState,
     ({ columns }) => columns,
   )
-  const rawTilemap = ObservableState.observeTransform(
-    observableState,
-    ({ tilemap }) => tilemap,
-  )
   const tilemap = ObservableState.observeTransform(
-    [rawTilemap, rows, columns],
-    (rawTilemap, rows, columns) => factoryTilemap(rows, columns, rawTilemap),
+    observableState,
+    ({ tilemap: rawTilemap }) => rawTilemap,
   )
 
   return new Component('div', {

@@ -14,7 +14,7 @@ function getBounds(rowData) {
   const columns = (rowData.tilemap[0] || []).length + 1
   const ratioWidth = 200 / columns
   const ratioHeight = 200 / rows
-  console.log({ ratioWidth, ratioHeight, columns, rows })
+  // console.log({ ratioWidth, ratioHeight, columns, rows })
   const ratio = Math.floor(Math.min(ratioWidth, ratioHeight))
   const width = ObservableState.create(ratio * columns)
   const height = ObservableState.create(ratio * rows)
@@ -24,9 +24,9 @@ function getBounds(rowData) {
       'max-height': height,
       position: 'relative',
     },
-    onResize: ({ target }) => {
-      console.log({ target })
-    },
+    // onResize: ({ target }) => {
+    //   console.log({ target })
+    // },
   }
 }
 

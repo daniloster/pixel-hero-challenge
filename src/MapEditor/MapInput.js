@@ -9,32 +9,26 @@ className.scope(`
   flex-direction: row;
   flex-wrap: wrap;
 `)
+className.scope('.grouped-columns', '')
+className.scope('.tile', `width: calc(100% / var(--columns));`)
 
 export default function MapInput({ tilemap, setTilemap }) {
-  className.scope(
-    '.tile',
-    ObservableState.observeTransform(
-      tilemap,
-      (matrix) => `width: ${100 / (matrix[0] || []).length}%;`,
-    ),
-  )
   const children = ObservableState.observeTransform(
     tilemap,
-    (tilemapValues, oldChildren) => {
+    (tilemapValues) => {
       const childNodes = []
       tilemapValues.forEach((cells, rowIndex) =>
         cells.forEach((_, columnIndex) => {
           const key = `tilemap-${rowIndex}-${columnIndex}`
           childNodes.push(
-            (oldChildren || []).find((oldCell) => oldCell.key === key) ||
-              new TilemapCell({
-                className: 'tile',
-                key,
-                rowIndex,
-                columnIndex,
-                tilemap,
-                setTilemap,
-              }),
+            new TilemapCell({
+              className: 'tile',
+              key,
+              rowIndex,
+              columnIndex,
+              tilemap,
+              setTilemap,
+            }),
           )
         }),
       )
@@ -45,5 +39,11 @@ export default function MapInput({ tilemap, setTilemap }) {
   return new Component('div', {
     className,
     children,
+    style: {
+      '--columns': ObservableState.observeTransform(
+        tilemap,
+        (matrix) => (matrix[0] || []).length,
+      ),
+    },
   })
 }

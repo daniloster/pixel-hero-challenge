@@ -47,14 +47,14 @@ function defaultUnit({ target }) {
     target.offsetHeight > winHeight || stretch ? winHeight : target.offsetHeight
   const unitW = Math.floor(width / columns)
   const unitH = Math.floor(height / rows)
-  console.log({
-    unitH,
-    unitW,
-    width,
-    height,
-    stretch,
-    compact: target.getAttribute('data-compact'),
-  })
+  // console.log({
+  //   unitH,
+  //   unitW,
+  //   width,
+  //   height,
+  //   stretch,
+  //   compact: target.getAttribute('data-compact'),
+  // })
   const unit = Math.min(unitW, unitH)
   if (unit > 0) {
     if (stretch) {

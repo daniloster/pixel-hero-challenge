@@ -126,6 +126,7 @@ export default function Modal(props) {
       animation.classList.remove('animating')
     }
   })
+  this.node = () => modal.node()
 }
 
 Modal.prototype.close = function close() {
@@ -139,4 +140,5 @@ Modal.prototype.open = function open() {
   const self = this
   self.state.set(() => true)
   self.onOpen()
+  self.node().focus()
 }

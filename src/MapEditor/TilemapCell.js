@@ -1,13 +1,15 @@
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
-import { options } from './Tilemap'
+import { Dictionary, options } from './Tilemap'
 
 const containerClassName = new CSS('tilemap-cell')
 containerClassName.scope('select', 'width: 100%;')
 
 const DATA_ROW_INDEX = 'data-row-index'
 const DATA_COLUMN_INDEX = 'data-column-index'
+const EMPTY_LIST = []
+const NONE = [Dictionary.None]
 
 export default function TilemapCell({
   className = '',
@@ -29,7 +31,7 @@ export default function TilemapCell({
     }
   })
   const value = ObservableState.observeTransform(tilemap, (tilemapValues) => {
-    return tilemapValues[rowIndex][columnIndex][0]
+    return ((tilemapValues[rowIndex] || EMPTY_LIST)[columnIndex] || NONE)[0]
   })
 
   return new Component('div', {

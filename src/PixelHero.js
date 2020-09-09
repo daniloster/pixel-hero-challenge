@@ -85,21 +85,6 @@ export default function PixelHero() {
   Service.init(state)
   Service.syncCountMaps()
 
-  // Service.syncCountMaps().then((count) => {
-  //   console.log({ count })
-  //   Service.saveMap([
-  //     [['None'], ['RescuableBlock'], ['RescuePoint']],
-  //     [['None'], ['Player'], ['None']],
-  //     [['None'], ['None'], ['None']],
-  //   ]).then(() => {
-  //     Service.getTotalMaps().then((count) => console.log({ count }))
-  //   })
-  // })
-  // const { search } = location
-  // const mode =
-  //   search.length === 0
-  //     ? new MapEditor()
-  //     : new SecretGamePlay({ serialized: search })
   return new Component('div', {
     className: ObservableState.observeTransform(
       state,

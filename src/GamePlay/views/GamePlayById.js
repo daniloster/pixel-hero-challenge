@@ -28,7 +28,6 @@ className.scope(
 )
 
 export default function GamePlayById({ id }) {
-  console.log({ id })
   const map = ObservableState.create(null)
   const error = ObservableState.create(null)
   Service.getMap(id)
