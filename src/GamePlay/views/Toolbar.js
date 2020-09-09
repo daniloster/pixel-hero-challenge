@@ -12,9 +12,6 @@ justify-content: center;
 `,
 )
 className.scope('button', 'padding: 0.5rem;')
-className.scope('*:last-child', 'display: none;')
-className.modifier('.gameOver *:last-child', 'display: block;')
-className.modifier('.gameOver *:not(:last-child)', 'display: none;')
 
 export default function Toolbar({ state, onExit }) {
   return new Component('div', {
@@ -30,16 +27,13 @@ export default function Toolbar({ state, onExit }) {
           click: (e) => {
             state.set((old) => {
               if (old.includes(GameState.Succeed)) {
-                onExit()
                 return old
               }
               return [GameState.GameOver]
             })
+            onExit()
           },
         },
-      }),
-      new Component('div', {
-        children: 'Click outside to close.',
       }),
     ],
   })
