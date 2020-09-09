@@ -1,5 +1,11 @@
+import ObservableState from './common/ObservableState'
+import Link from './common/router/Link'
+import Router from './common/router/Router'
+import Service from './common/Service'
 import Component from './common/ui/Component'
 import CSS from './common/ui/CSS'
+import GamePlayById from './GamePlay/views/GamePlayById'
+import ListingMaps from './ListingMaps/ListingMaps'
 import MapEditor from './MapEditor/MapEditor'
 
 CSS.animation('pulse')
@@ -65,15 +71,67 @@ CSS.animation('modal-out')
   .build()
 
 const className = new CSS('pixel-hero')
+className.modifier('.loaded .loading', 'display: none;')
+className.modifier('.loaded .game', 'display: block;')
+className.scope('.loading', 'display: block;')
+className.scope('.game', 'display: none;')
 className.scope('padding: 0.5rem;')
 className.scope('h1', 'padding: 0 0 1.5rem 0;')
 
 export default function PixelHero() {
+  const state = ObservableState.create('loading')
+
+  Service.init(state)
+  Service.syncCountMaps()
+
+  // Service.syncCountMaps().then((count) => {
+  //   console.log({ count })
+  //   Service.saveMap([
+  //     [['None'], ['RescuableBlock'], ['RescuePoint']],
+  //     [['None'], ['Player'], ['None']],
+  //     [['None'], ['None'], ['None']],
+  //   ]).then(() => {
+  //     Service.getTotalMaps().then((count) => console.log({ count }))
+  //   })
+  // })
+  // const { search } = location
+  // const mode =
+  //   search.length === 0
+  //     ? new MapEditor()
+  //     : new SecretGamePlay({ serialized: search })
   return new Component('div', {
-    className,
+    className: ObservableState.observeTransform(
+      state,
+      (newState) => `${className} ${newState}`,
+    ),
     children: [
       new Component('h1', { children: 'Pixel Hero' }),
-      new MapEditor(),
+      new Component('div', {
+        className: 'game',
+        children: [
+          new Link({ to: '/', children: 'Challenges' }),
+          new Link({ to: '/editor', children: 'Create Map' }),
+        ],
+      }),
+      new Component('div', {
+        className: 'game',
+        children: [
+          new Router({
+            routes: [
+              ['/', () => new ListingMaps()],
+              ['/editor', () => new MapEditor()],
+              [
+                '/challenge/{id}',
+                ({ params }) => new GamePlayById({ id: params.id }),
+              ],
+            ],
+          }),
+        ],
+      }),
+      new Component('div', {
+        className: 'loading',
+        children: 'Loading...',
+      }),
     ],
   })
 }

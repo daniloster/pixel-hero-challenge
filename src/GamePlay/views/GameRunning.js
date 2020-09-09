@@ -6,11 +6,29 @@ import MapRendering from '../../MapEditor/MapRendering'
 import GameState from '../GameState'
 
 const className = new CSS('game-running')
-className.scope('display: none;')
-className.modifier('.initial', 'display: block;')
-className.modifier('.running', 'display: block;')
+className.modifier('.initial', 'display: flex;')
+className.modifier('.running', 'display: flex;')
+className.scope(`
+  display: none;
+  
+  align-items: stretch;
+  justify-items: stretch;
+  align-content: center;
+  justify-content: center;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 100%;
+  flex-direction: column;
+  flex-wrap: wrap;
+`)
+className.scope(
+  '.rendering-wrapper',
+  `
+  display: block;
+`,
+)
 
-export default function GameRunning({ state, map }) {
+export default function GameRunning({ isCompact, state, map }) {
   const columns = ObservableState.observeTransform(
     map,
     ({ columns }) => columns,
@@ -50,8 +68,14 @@ export default function GameRunning({ state, map }) {
       }
     }),
     children: [
-      new MapRendering({ tilemap, rows, columns }),
-      new CountDown({ countDown }),
+      new Component('div', {
+        className: 'rendering-wrapper',
+        children: [new MapRendering({ isCompact, tilemap, rows, columns })],
+      }),
+      new Component('div', {
+        className: 'rendering-wrapper',
+        children: [new CountDown({ countDown })],
+      }),
     ],
   })
 }

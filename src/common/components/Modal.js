@@ -66,6 +66,7 @@ className.scope(
  */
 export default function Modal(props) {
   const {
+    className: externalClassName = '',
     children = [],
     isInitiallyOpen = false,
     onClose = noop,
@@ -79,7 +80,10 @@ export default function Modal(props) {
   /** @type {import("../types").Component} */
   const content = new Component('div', {
     className: 'content',
-    children,
+    children: ObservableState.observeTransform(
+      [open, children],
+      (isOpen, childNodes) => (isOpen ? childNodes : []),
+    ),
   })
   const unsubscribe = useClickOutside(
     content.node(),
@@ -90,7 +94,7 @@ export default function Modal(props) {
     },
   )
   const modal = new Component('div', {
-    className,
+    className: `${className} ${externalClassName}`,
     classList: ObservableState.observeTransform(open, (isOpen) => {
       animating = animating || isOpen
       return {

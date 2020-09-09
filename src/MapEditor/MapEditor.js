@@ -13,6 +13,30 @@ import isButtonDisabled from './validations/isButtonDisabled'
 import toValidationMessages from './validations/toValidationMessages'
 import ValidationMessages from './validations/ValidationMessages'
 
+const classNameProof = new CSS('modal-map-editor-proof')
+classNameProof.scope(
+  '> .container > .content > div',
+  `
+  width: 80vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 100%;
+  `,
+)
+classNameProof.scope(
+  '> .container > .content > div > div',
+  `
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  `,
+)
 const className = new CSS('map-editor')
 className.scope(
   'h2',
@@ -50,7 +74,6 @@ export default function MapEditor() {
       columns: 3,
       rows: 3,
       tilemap: factoryTilemap(MAX_ROWS, MAX_COLUMNS),
-      doable: false,
     },
   ])
   const mapDimensionActions = {
@@ -125,11 +148,13 @@ function MapSubmission({ tilemap }) {
   const gamePlay = new GamePlay({
     serialized: ObservableState.observeTransform(tilemap, serializeMap),
     isMapEditor: true,
+    isCompact: false,
     onExit: () => {
       modal.close()
     },
   })
   const modal = new Modal({
+    className: classNameProof,
     children: [
       new Component('div', {
         children: [gamePlay],

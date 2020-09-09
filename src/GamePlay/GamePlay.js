@@ -65,14 +65,19 @@ function useGameLoop(map) {
 
 const className = new CSS('game-play')
 
-export default function GamePlay({ serialized, isMapEditor, onExit = noop }) {
+export default function GamePlay({
+  serialized,
+  isCompact = true,
+  isMapEditor,
+  onExit = noop,
+}) {
   const [state, map, restart] = useGameLoop(useGameMap(serialized))
   const component = new Component('div', {
     className,
     children: [
-      new GameFinished({ state, map, isMapEditor }),
+      new GameFinished({ state, serialized, isMapEditor }),
       new GameOver({ state }),
-      new GameRunning({ state, map }),
+      new GameRunning({ isCompact, state, map }),
       new Toolbar({ state, onExit }),
     ],
   })

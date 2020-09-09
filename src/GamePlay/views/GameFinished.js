@@ -1,4 +1,8 @@
+import Message from '../../common/components/Message'
+import copyToClipboard from '../../common/copyToClipboard'
 import ObservableState from '../../common/ObservableState'
+import Link from '../../common/router/Link'
+import Service from '../../common/Service'
 import Component from '../../common/ui/Component'
 import CSS from '../../common/ui/CSS'
 import GameState from '../GameState'
@@ -15,26 +19,37 @@ justify-items: center;
 )
 
 className.modifier('.finished', 'display: flex;')
-className.modifier('.finished .share-url', 'display: block;')
+className.modifier('.url .share-url', 'display: block;')
+className.scope(
+  '.share-url',
+  'word-break: keep-all; white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis; display: none;',
+)
 
-export default function GameFinished({ state, map, isMapEditor }) {
-  const shareURL = ObservableState.create('')
+export default function GameFinished({ state, serialized, isMapEditor }) {
+  const errorMessage = ObservableState.create('')
+  const url = ObservableState.create('')
+
   return new Component('div', {
     className,
-    classList: ObservableState.observeTransform(state, (value) => {
-      const finished = value.includes(GameState.Succeed)
-      if (finished) {
-        shareURL.set(() => null)
-      }
-      return {
-        finished,
-      }
-    }),
+    classList: ObservableState.observeTransform(
+      [state, url, errorMessage],
+      (value, urlText, errorMessageText) => {
+        const finished = value.includes(GameState.Succeed)
+        return {
+          finished,
+          url: !!urlText,
+          error: !!errorMessageText,
+        }
+      },
+    ),
     children: [
       new Component('div', {
         html: true,
-        children: isMapEditor
-          ? `
+        children: ObservableState.observeTransform(
+          errorMessage,
+          (errorMessageText) =>
+            !errorMessageText && isMapEditor
+              ? `
           <h3>
             Congratulations! You rock!
           </h3>
@@ -42,37 +57,70 @@ export default function GameFinished({ state, map, isMapEditor }) {
             Click outside to close or share with friends.
           </p>
           `
-          : `
+              : `
           <h3>
             Congratulations! You rock!
           </h3>
           `,
+        ),
       }),
       new Component('button', {
         attrs: { type: 'button' },
-        style: { display: isMapEditor ? 'block' : 'none' },
-        children: ObservableState.observeTransformSync(
-          shareURL,
-          (shareURLValue) => (shareURLValue ? 'Copy' : 'Share'),
+        style: {
+          display: ObservableState.observeTransform(
+            errorMessage,
+            (errorMessageText) =>
+              !errorMessageText && isMapEditor ? 'block' : 'none',
+          ),
+          'align-self': 'center',
+        },
+        children: ObservableState.observeTransform(url, (text) =>
+          !!text ? 'Copy' : 'Share',
         ),
         events: {
-          click: (e) => {
-            const url = shareURL.get()
-            if (url) {
-              copyToClipboard(url)
-            } else {
-              shareURL.set(() => hashMap(map.get().tilemap))
-            }
-          },
+          click: ObservableState.observeTransform(
+            serialized,
+            (serializedMap) => (e) => {
+              const text = url.get()
+              if (text) {
+                copyToClipboard(`${location.origin}/#${text}`)
+              } else {
+                Service.saveMap(JSON.parse(serializedMap))
+                  .then(({ id }) => {
+                    url.set(() => `/challenge/${id}`)
+                  })
+                  .catch((reason) => {
+                    if (reason) {
+                      errorMessage.set(
+                        () =>
+                          'I guess this map already exists, trying creating another map...',
+                      )
+                    }
+                  })
+              }
+            },
+          ),
         },
       }),
       new Component('div', {
-        children: ObservableState.observeTransformSync(
-          shareURL,
-          (shareURLValue) => {
-            return shareURLValue ? `URL: ${shareURLValue}` : ''
-          },
-        ),
+        children: [
+          new Message({ message: errorMessage, isError: true }),
+          new Component('div', {
+            className: 'share-url',
+            children: [
+              new Component('p', {
+                children: 'Copy and share with friends...',
+              }),
+              new Link({
+                to: url,
+                children: ObservableState.observeTransform(
+                  url,
+                  (urlText) => `${location.origin}/#${urlText}`,
+                ),
+              }),
+            ],
+          }),
+        ],
       }),
     ],
   })

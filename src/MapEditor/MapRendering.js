@@ -2,7 +2,6 @@ import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
 import { UNIT_SIZE } from '../common/units'
-import Heart from './tile/Heart'
 import MoveableBox from './tile/MoveableBox'
 import Player from './tile/Player'
 import RescuableBox from './tile/RescuableBox'
@@ -11,28 +10,68 @@ import Wall, { WALL_COLOR } from './tile/Wall'
 import { Dictionary } from './Tilemap'
 
 const className = new CSS('map-rendering')
-className.scope(`padding: ${UNIT_SIZE / 2}; background-color: ${WALL_COLOR};`)
+className.scope(`--unitSize: ${UNIT_SIZE}px;`)
+className.scope('box-sizing: border-box; cursor: default;')
+className.scope(
+  `padding: calc(var(--unitSize) / 2); background-color: ${WALL_COLOR};`,
+)
+// className.scope('width: 100%;')
+// className.scope('height: 100%;')
+className.scope('width: calc((var(--columns) + 1) * var(--unitSize) * 1px);')
+className.scope('height: calc((var(--rows) + 1) * var(--unitSize) * 1px);')
+className.scope('.MapArea', 'position: relative; background-color: #c0c0c0;')
 className.scope(
   '.MapArea',
-  'height: 100%; width: 100%; position: relative; background-color: #c0c0c0;',
+  'width: calc(var(--columns) * var(--unitSize) * 1px); left: calc((var(--unitSize) / 2) * 1px);',
+)
+className.scope(
+  '.MapArea',
+  'height: calc(var(--rows) * var(--unitSize) * 1px); top: calc((var(--unitSize) / 2) * 1px);',
 )
 
 const INITIAL_TILEMAP = [[[]]]
 
-export default function MapRendering({ tilemap, columns, rows }) {
-  className.scope(
-    ObservableState.observeTransform(
-      columns,
-      (value) => `width: ${value * UNIT_SIZE + UNIT_SIZE}px`,
-    ),
-  )
-  className.scope(
-    ObservableState.observeTransform(
-      rows,
-      (value) => `height: ${value * UNIT_SIZE + UNIT_SIZE}px`,
-    ),
-  )
+/**
+ *
+ * @param {{ target: HTMLElement }} params
+ */
+function defaultUnit({ target }) {
+  const columns = Number(target.getAttribute('data-columns')) + 1
+  const rows = Number(target.getAttribute('data-rows')) + 1
+  const stretch = target.getAttribute('data-compact') === 'false'
+  const winWidth = document.body.offsetWidth - 300
+  const winHeight = document.body.offsetHeight - 300
+  const width =
+    target.offsetWidth > winWidth || stretch ? winWidth : target.offsetWidth
+  const height =
+    target.offsetHeight > winHeight || stretch ? winHeight : target.offsetHeight
+  const unitW = Math.floor(width / columns)
+  const unitH = Math.floor(height / rows)
+  console.log({
+    unitH,
+    unitW,
+    width,
+    height,
+    stretch,
+    compact: target.getAttribute('data-compact'),
+  })
+  const unit = Math.min(unitW, unitH)
+  if (unit > 0) {
+    if (stretch) {
+      target.width = columns * unit
+      target.height = rows * unit
+    }
+    target.style.setProperty('--unitSize', unit)
+  }
+}
 
+export default function MapRendering({
+  isCompact = true,
+  columns,
+  rows,
+  tilemap,
+  unit = defaultUnit,
+}) {
   const children = ObservableState.observeTransform(
     tilemap,
     (tilemapValues = [[[]]], oldChildren = []) => {
@@ -48,8 +87,8 @@ export default function MapRendering({ tilemap, columns, rows }) {
               childNodes.push(
                 new Tile({
                   key,
-                  row: rowIndex,
                   column: columnIndex,
+                  row: rowIndex,
                   tilemap,
                 }),
               ),
@@ -61,12 +100,29 @@ export default function MapRendering({ tilemap, columns, rows }) {
     },
   )
 
+  const _columns = ObservableState.observeTransform(columns)
+  const _rows = ObservableState.observeTransform(rows)
+
   return new Component('div', {
     className,
+    attrs: {
+      'data-columns': _columns,
+      'data-rows': _rows,
+      'data-compact': isCompact,
+    },
+    style: {
+      '--columns': _columns,
+      '--rows': _rows,
+    },
+    onResize: unit,
     children: [
       new Component('div', {
         className: 'MapArea',
         children,
+        style: {
+          '--columns': _columns,
+          '--rows': _rows,
+        },
       }),
     ],
   })
@@ -74,10 +130,10 @@ export default function MapRendering({ tilemap, columns, rows }) {
 
 const classNameTile = new CSS('tile')
 classNameTile.scope(
-  `position: absolute; width: ${UNIT_SIZE}px; height: ${UNIT_SIZE}px;`,
+  `position: absolute; width: calc(var(--unitSize) * 1px); height: calc(var(--unitSize) * 1px);`,
 )
-classNameTile.scope(`left: calc(var(--column) * ${UNIT_SIZE}px);`)
-classNameTile.scope(`top: calc(var(--row) * ${UNIT_SIZE}px);`)
+classNameTile.scope(`left: calc(var(--column) * var(--unitSize) * 1px);`)
+classNameTile.scope(`top: calc(var(--row) * var(--unitSize) * 1px);`)
 classNameTile.scope(
   '.tile-content',
   'position: relative; height: 100%; width: 100%;',
@@ -87,7 +143,8 @@ classNameTile.scope(
   'z-index: var(--z-index); position: absolute; top: 0; right: 0; bottom: 0; left: 0;',
 )
 classNameTile.scope('.tile-asset > *', 'width: 100%; height: 100%;')
-function Tile({ key, row, column, tilemap }) {
+
+function Tile({ key, column, row, style, tilemap }) {
   const tokens = ObservableState.observeTransform(
     tilemap,
     (tilemapValues) => (tilemapValues[row] || [])[column] || [Dictionary.None],
@@ -138,10 +195,8 @@ function TileContent({ key, assets }) {
 const MAP_TILEMAP = {
   [Dictionary.MoveableBox]: MoveableBox,
   [Dictionary.RescuableBox]: RescuableBox,
-  [Dictionary.Bomb]: () => new Component('div'),
-  [Dictionary.Heart]: Heart,
   [Dictionary.Player]: Player,
   [Dictionary.RescuePoint]: RescuePoint,
   [Dictionary.Wall]: Wall,
-  [Dictionary.None]: () => new Component('div'),
+  [Dictionary.None]: (props) => new Component('div', props),
 }

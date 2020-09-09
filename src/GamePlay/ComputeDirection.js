@@ -83,7 +83,6 @@ export function computeMovementX(mapState, player, direction) {
 }
 
 export function computeMovementY(mapState, player, direction) {
-  console.log('Computing Y:', mapState, player, direction)
   mapState.set((oldState) => {
     const { tilemap, rows } = mapState.get()
     const nextYY = player.y + 2 * direction

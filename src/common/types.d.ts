@@ -49,9 +49,12 @@ export interface ComponentProps {
     | { [key: string]: boolean }
     | ObservableState<{ [key: string]: boolean }>
   className: string | ObservableState<string> | CSS
-  key: string
   children: Node | ObservableState<Node>
+  key: string
   events: Events
+  onDestroy: () => void
+  onMount: () => void
+  onResize: ({ target: HTMLElement, contentRect: DOMRectReadOnly }) => void
 }
 export interface Component {
   node: () => HTMLElement
