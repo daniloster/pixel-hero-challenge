@@ -143,7 +143,7 @@ function MapSubmission({ tilemap }) {
   )
   const disabled = ObservableState.observeTransform(messages, isButtonDisabled)
   const gameViewport = {
-    width: () => modalContent.node().offsetWidth,
+    width: () => modalContent.node().offsetWidth - 16,
     height: () => modalContent.node().offsetHeight - 60,
   }
   const gamePlay = new GamePlay({

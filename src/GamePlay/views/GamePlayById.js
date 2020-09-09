@@ -45,7 +45,7 @@ export default function GamePlayById({ id }) {
       if (mapValue) {
         const gamePlay = new GamePlay({
           viewport: {
-            width: () => window.innerWidth,
+            width: () => window.innerWidth - 16,
             height: () => {
               console.log({
                 height: window.innerHeight,
