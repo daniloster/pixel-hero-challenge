@@ -48,15 +48,16 @@ export default function ListingMaps() {
       }),
       new Grid({
         data,
-        rowMaxWidth: '50%',
         columns: [
           {
             content: ({ rowData }) => rowData.dimension.toString(),
             head: () => 'Area (blocks²)',
+            width: 90,
           },
           {
             content: ({ rowData }) => rowData.score.toString(),
             head: () => 'Score',
+            width: 60,
           },
           {
             content: ({ rowData }) =>

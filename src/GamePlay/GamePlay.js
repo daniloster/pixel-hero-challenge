@@ -10,6 +10,7 @@ import Exit from './views/Exit'
 import GameFinished from './views/GameFinished'
 import GameOver from './views/GameOver'
 import GameRunning from './views/GameRunning'
+import Joystick from './views/Joystick'
 
 const FPS = 25
 const INTERVAL = 1000 / FPS
@@ -61,9 +62,9 @@ function useGameLoop(map) {
   })
 
   const joystick = {
-    top: () => (actions.ArrowTop = true),
+    up: () => (actions.ArrowUp = true),
     right: () => (actions.ArrowRight = true),
-    bottom: () => (actions.ArrowBottom = true),
+    down: () => (actions.ArrowDown = true),
     left: () => (actions.ArrowLeft = true),
   }
 
@@ -90,7 +91,7 @@ export default function GamePlay({
       new GameFinished({ state, serialized, isMapEditor }),
       new GameOver({ state }),
       new GameRunning({ viewport, state, map }),
-      // new Joystick({ joystick, state }),
+      new Joystick({ joystick, state }),
       new Exit({ state, onExit }),
     ],
   })
