@@ -88,17 +88,17 @@ module.exports = {
   },
   plugins: [
     new WorkerPlugin(),
-    env.production &&
-      new CompressionWebpackPlugin({
-        filename: '[file]',
-        algorithm: 'gzip',
-        test: /\.jsx?$|\.css$|\.html$/,
-        compressionOptions: {
-          level: 9,
-        },
-        threshold: 10240,
-        minRatio: 0.8,
-      }),
+    // env.production &&
+    //   new CompressionWebpackPlugin({
+    //     filename: '[file]',
+    //     algorithm: 'gzip',
+    //     test: /\.jsx?$|\.css$|\.html$/,
+    //     compressionOptions: {
+    //       level: 9,
+    //     },
+    //     threshold: 10240,
+    //     minRatio: 0.8,
+    //   }),
     new HtmlWebpackPlugin({
       title: 'Pixel Hero',
       templateContent: `

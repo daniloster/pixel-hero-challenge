@@ -7,6 +7,8 @@
     "build": "NODE_ENV=production webpack --config tools/webpack/webpack.config.js --mode production",
     "start": "NODE_ENV=development PORT=4000 webpack-dev-server --config tools/webpack/webpack.config.js --mode development",
     "test": "cross-env NODE_ENV=test jest --config jest.config.js",
+    "predeploy": "yarn build",
+    "deploy": "firebase deploy",
     "firebase": "firebase",
     "firebase-bolt": "firebase-bolt"
   },
