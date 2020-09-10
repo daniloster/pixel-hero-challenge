@@ -112,6 +112,7 @@ module.exports = {
       }
     </style>
     <meta name="viewport" content="width=device-width">
+    <link href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P" rel="stylesheet">
   </head>
   <body>
     <div id="root" />

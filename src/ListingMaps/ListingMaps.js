@@ -1,4 +1,5 @@
 import Grid from '../common/components/Grid'
+import Icon from '../common/components/Icon'
 import ObservableState from '../common/ObservableState'
 import Link from '../common/router/Link'
 import Service from '../common/Service'
@@ -8,6 +9,11 @@ import countMaps from '../countMaps'
 import MapRendering from '../MapEditor/MapRendering'
 
 const className = new CSS('listing-maps')
+className.scope('.play', 'font-size: 2rem;')
+className.scope(
+  ['.play', '.play:hover', '.play:active', '.play:visited'],
+  'color: #411eb7;',
+)
 
 function getBounds(rowData) {
   const rows = rowData.tilemap.length + 1
@@ -66,7 +72,11 @@ export default function ListingMaps() {
           },
           {
             content: ({ rowData }) =>
-              new Link({ to: `/challenge/${rowData.id}`, children: 'Play' }),
+              new Link({
+                to: `/challenge/${rowData.id}`,
+                children: [new Icon({ name: 'gamepad' })],
+                className: className.for('play'),
+              }),
             head: () => 'Play',
             width: 60,
           },
