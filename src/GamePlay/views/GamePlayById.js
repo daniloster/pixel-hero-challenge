@@ -61,10 +61,6 @@ export default function GamePlayById({ id }) {
           viewport: {
             width: () => window.innerWidth - 16,
             height: () => {
-              console.log({
-                height: window.innerHeight,
-                top: gamePlay.node().offsetTop,
-              })
               return window.innerHeight - gamePlay.node().offsetTop * 2
             },
           },
