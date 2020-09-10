@@ -83,8 +83,12 @@ export default function GamePlay({
   serialized,
   isMapEditor,
   onExit = noop,
+  onStateChange = noop,
 }) {
   const [state, map, restart, joystick] = useGameLoop(useGameMap(serialized))
+  state.subscribe({
+    next: onStateChange,
+  })
   const component = new Component('div', {
     className,
     children: [

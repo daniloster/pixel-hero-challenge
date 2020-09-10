@@ -52,7 +52,7 @@ className.scope(
 )
 className.scope(
   '.MapSubmission p',
-  `color: #fff; font-size: 1rem; padding-right: 1rem;`,
+  `color: #fff; font-size: 1rem; padding: 0 1rem; margin: 0;`,
 )
 className.scope(
   '.MapEditorItem',

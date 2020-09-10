@@ -78,6 +78,12 @@ CSS.global(`
     *:not(.fa) {
       font-family: 'Press Start 2P', cursive;
     }
+    #canvas {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+    }
     .nes-btn.showcode {
       position: absolute;
       font-size: 12px;

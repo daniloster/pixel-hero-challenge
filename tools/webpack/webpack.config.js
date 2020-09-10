@@ -117,6 +117,7 @@ module.exports = {
     <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet">
   </head>
   <body>
+    <canvas id="canvas"></canvas>
     <div id="root" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- <script src="https://cdn.jsdelivr.net/npm/uuidv4@6.2.3/build/lib/uuidv4.min.js"></script> -->
