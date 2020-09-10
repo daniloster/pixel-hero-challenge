@@ -13,8 +13,9 @@ className.scope(
   appearance: none;
   width: 100%;
   height: 15px;
+  margin-top: 0.5rem;
   border-radius: 5px;
-  background: #d3d3d3;
+  background: #9393C3;
   outline: none;
   opacity: 0.7;
   transition: 0.2s;
@@ -28,34 +29,20 @@ className.scope(
   padding: 0.5rem 0 0 0;
 `,
 )
-className.scope(
-  'label:first-child',
-  `
-  padding: 0;
-`,
-)
-className.scope(
-  '.MapDimensionLayout__slider::-webkit-slider-thumb',
-  `
-  appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #4caf50;
-  cursor: pointer;
-`,
-)
-className.scope(
-  '.MapDimensionLayout__slider::-moz-range-thumb',
-  `
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #4caf50;
-  cursor: pointer;
-`,
-)
+className.scope('label:first-child', 'padding: 0;')
+className.scope('label span:first-child', 'padding: 0 0 0.5rem 0;')
+const thumb = `
+appearance: none;
+appearance: none;
+width: 25px;
+height: 25px;
+border-radius: 50%;
+background: #F2C409;
+cursor: pointer;
+box-shadow: 0px 1px 16px -5px rgba(0,0,0,0.85);
+`
+className.scope('.MapDimensionLayout__slider::-webkit-slider-thumb', thumb)
+className.scope('.MapDimensionLayout__slider::-moz-range-thumb', thumb)
 className.scope(
   '.MapDimensionLayout__limits',
   `
@@ -67,6 +54,7 @@ className.scope(
 )
 
 export default function MapDimension({
+  className: externalClassName = '',
   columns,
   rows,
   onChangeColumns,
@@ -82,7 +70,7 @@ export default function MapDimension({
   )
 
   return new Component('div', {
-    className,
+    className: `${className} ${externalClassName}`,
     children: [
       new Component('label', {
         attrs: { for: COLUMN_ID },

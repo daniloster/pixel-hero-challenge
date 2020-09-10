@@ -17,7 +17,7 @@ className.scope(
 className.scope('i', 'color: #411eb7; cursor: pointer; font-size: inherit;')
 
 export default function IconButton(props = {}) {
-  new Component('button', {
+  return new Component('button', {
     ...props,
     attrs: { type: 'button', ...(!!props.attrs ? props.attrs : {}) },
     children: [new Icon({ name: props.name })],

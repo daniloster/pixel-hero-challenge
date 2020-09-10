@@ -3,8 +3,9 @@ import Component from '../ui/Component'
 import CSS from '../ui/CSS'
 
 const className = new CSS('button')
+className.scope('padding: 6px;')
 className.scope(
-  // 'padding: 0.5rem; border: 0; background-color: transparent; outline: none; transition: background-color 0.1s ease-in;',
+  'button',
   `
     --bg-color: #92CD41;
     --shadow-color: #4AA52E;
@@ -13,29 +14,30 @@ className.scope(
     display: inline-block;
     position: relative;
     text-align: center;
-    font-size: 30px;
-    padding: 20px;
+    padding: 1.5rem;
     font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
     text-decoration: none;
+    outline: none;
     color: white;
     box-shadow: inset -4px -4px 0px 0px var(--shadow-color);
   `,
 )
-className.modifier(
-  [':hover', ':focus'],
+className.scope(
+  ['button:hover', 'button:focus'],
   `
   background: var(--hover-color);
   box-shadow: inset -6px -6px 0px 0px var(--shadow-color);
 `,
 )
-className.modifier(
-  ':active',
+className.scope(
+  'button:active',
   `
   box-shadow: inset 4px 4px 0px 0px var(--shadow-color);
 `,
 )
-className.modifier(
-  [':before', ':after'],
+className.scope(
+  ['button:before', 'button:after'],
   `
   content: '';
   position: absolute;
@@ -44,8 +46,8 @@ className.modifier(
   box-sizing: content-box;
 `,
 )
-className.modifier(
-  ':before',
+className.scope(
+  'button:before',
   `
   top: -6px;
   left: 0;
@@ -53,8 +55,8 @@ className.modifier(
   border-bottom: 6px black solid;
 `,
 )
-className.modifier(
-  ':after',
+className.scope(
+  'button:after',
   `
   left: -6px;
   top: 0;
@@ -62,7 +64,7 @@ className.modifier(
   border-right: 6px black solid;
 `,
 )
-className.modifier(
+className.scope(
   '.danger',
   `
   --bg-color: #E76E55;
@@ -70,7 +72,7 @@ className.modifier(
   --hover-color: #CE372B;
 `,
 )
-className.modifier(
+className.scope(
   '.warning',
   `
   --bg-color: #F7D51D;
@@ -80,16 +82,20 @@ className.modifier(
 )
 
 export default function Button(props = {}) {
-  new Component('button', {
-    ...props,
-    className: `${className} ${props.className || ''}`.trim(),
-    classList: ObservableState.observeTransform(
-      [props.state, props.classList],
-      (state, classList) => ({
-        [className.for(state)]: true,
-        ...classList,
+  return new Component('div', {
+    className,
+    children: [
+      new Component('button', {
+        ...props,
+        classList: ObservableState.observeTransform(
+          [props.state, props.classList],
+          (state, classList) => ({
+            [className.for(state)]: true,
+            ...(classList ? classList : {}),
+          }),
+        ),
+        attrs: { type: 'button', ...(props.attrs ? props.attrs : {}) },
       }),
-    ),
-    attrs: { type: 'button', ...props.attrs },
+    ],
   })
 }

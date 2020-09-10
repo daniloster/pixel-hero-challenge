@@ -1,3 +1,4 @@
+import Button from '../../common/components/Button'
 import Message from '../../common/components/Message'
 import copyToClipboard from '../../common/copyToClipboard'
 import ObservableState from '../../common/ObservableState'
@@ -25,6 +26,49 @@ className.scope(
   'word-break: keep-all; white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis; display: none;',
 )
 className.scope('button', 'padding: 0.5rem;')
+
+function createButton({ errorMessage, isMapEditor, url, serialized }) {
+  return new Button({
+    state: ObservableState.observeTransform(url, (text) =>
+      text ? '' : 'warning',
+    ),
+    style: {
+      display: ObservableState.observeTransform(
+        errorMessage,
+        (errorMessageText) =>
+          !errorMessageText && isMapEditor ? 'block' : 'none',
+      ),
+      'align-self': 'center',
+    },
+    children: ObservableState.observeTransform(url, (text) =>
+      !!text ? 'Copy' : 'Share',
+    ),
+    events: {
+      click: ObservableState.observeTransform(
+        serialized,
+        (serializedMap) => (e) => {
+          const text = url.get()
+          if (text) {
+            copyToClipboard(`${location.origin}/#${text}`)
+          } else {
+            Service.saveMap(JSON.parse(serializedMap))
+              .then(({ id }) => {
+                url.set(() => `/challenge/${id}`)
+              })
+              .catch((reason) => {
+                if (reason) {
+                  errorMessage.set(
+                    () =>
+                      'I guess this map already exists, trying creating another map...',
+                  )
+                }
+              })
+          }
+        },
+      ),
+    },
+  })
+}
 
 export default function GameFinished({
   state,
@@ -70,44 +114,7 @@ export default function GameFinished({
           `,
         ),
       }),
-      new Component('button', {
-        attrs: { type: 'button' },
-        style: {
-          display: ObservableState.observeTransform(
-            errorMessage,
-            (errorMessageText) =>
-              !errorMessageText && isMapEditor ? 'block' : 'none',
-          ),
-          'align-self': 'center',
-        },
-        children: ObservableState.observeTransform(url, (text) =>
-          !!text ? 'Copy' : 'Share',
-        ),
-        events: {
-          click: ObservableState.observeTransform(
-            serialized,
-            (serializedMap) => (e) => {
-              const text = url.get()
-              if (text) {
-                copyToClipboard(`${location.origin}/#${text}`)
-              } else {
-                Service.saveMap(JSON.parse(serializedMap))
-                  .then(({ id }) => {
-                    url.set(() => `/challenge/${id}`)
-                  })
-                  .catch((reason) => {
-                    if (reason) {
-                      errorMessage.set(
-                        () =>
-                          'I guess this map already exists, trying creating another map...',
-                      )
-                    }
-                  })
-              }
-            },
-          ),
-        },
-      }),
+      createButton({ errorMessage, isMapEditor, url, serialized }),
       new Component('div', {
         children: [
           new Message({ message: errorMessage, isError: true }),

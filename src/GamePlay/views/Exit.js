@@ -1,29 +1,21 @@
-import Component from '../../common/ui/Component'
+import IconButton from '../../common/components/IconButton'
 import CSS from '../../common/ui/CSS'
 import GameState from '../GameState'
 
 const className = new CSS('exit')
-className.scope(
-  `
-position: absolute;
-top: -4rem;
-right: 0;
-z-index: 2;
-padding: 0.5rem;
-border-radius: 50%;
-background-color: transparent;
-border: 0;
-outline: none;
-`,
-)
-className.scope('i', 'color: #411eb7; cursor: pointer; font-size: 3rem;')
+const position = `
+  position: absolute;
+  top: -4rem;
+  right: 0;
+  z-index: 2;
+`
+className.scope(position)
 
 export default function Exit({ state, onExit }) {
-  return new Component('button', {
+  return new IconButton({
     className,
-    attrs: { type: 'button' },
-    children: '<i class="fa fa-times" aria-hidden="true" />',
-    html: true,
+    name: 'times',
+    size: '3rem',
     events: {
       click: (e) => {
         setTimeout(
