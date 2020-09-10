@@ -234,7 +234,6 @@ window.requestAnimFrame = (function () {
 
 window.addEventListener('DOMContentLoaded', () => {
   SetGlobals()
-  InitializeButton()
   InitializeConfetti()
 
   useResizeObserver(document.body, () => {
