@@ -101,13 +101,13 @@ export default function MapDimension({
               min: MIN_COLUMNS,
               max: MAX_COLUMNS,
             },
-            className: 'MapDimensionLayout__slider',
+            className: className.for('MapDimensionLayout__slider'),
             events: { change: onChangeColumns },
           }),
         ],
       }),
       new Component('div', {
-        className: 'MapDimensionLayout__limits',
+        className: className.for('MapDimensionLayout__limits'),
         children: [
           new Component('span', {
             children: MIN_COLUMNS,
@@ -134,13 +134,13 @@ export default function MapDimension({
               min: MIN_ROWS,
               max: MAX_ROWS,
             },
-            className: 'MapDimensionLayout__slider',
+            className: className.for('MapDimensionLayout__slider'),
             events: { change: onChangeRows },
           }),
         ],
       }),
       new Component('div', {
-        className: 'MapDimensionLayout__limits',
+        className: className.for('MapDimensionLayout__limits'),
         children: [
           new Component('span', {
             children: MIN_ROWS,

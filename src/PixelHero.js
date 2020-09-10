@@ -94,7 +94,7 @@ export default function PixelHero() {
   return new Component('div', {
     className: ObservableState.observeTransform(
       state,
-      (newState) => `${className} ${newState}`,
+      (newState) => `${className} ${className.for(newState)}`,
     ),
     children: [
       new Component('div', {
@@ -103,14 +103,14 @@ export default function PixelHero() {
       }),
       new Component('h1', { children: 'Pixel Hero' }),
       new Component('div', {
-        className: 'game',
+        className: className.for('game'),
         children: [
           new Link({ to: '/', children: 'Challenges' }),
           new Link({ to: '/editor', children: 'Create Map' }),
         ],
       }),
       new Component('div', {
-        className: 'game',
+        className: className.for('game'),
         children: [
           new Router({
             routes: [
@@ -125,7 +125,7 @@ export default function PixelHero() {
         ],
       }),
       new Component('div', {
-        className: 'loading',
+        className: className.for('loading'),
         children: 'Loading...',
       }),
     ],

@@ -103,7 +103,7 @@ export default function MapRendering({
     onResize: (view) => unit({ ...view, viewport }),
     children: [
       new Component('div', {
-        className: 'MapArea',
+        className: className.for('MapArea'),
         children,
         style: {
           '--columns': _columns,
@@ -174,12 +174,12 @@ function Tile({ key, column, row, style, tilemap }) {
 
 function TileContent({ key, assets }) {
   return new Component('div', {
-    className: 'tile-content',
+    className: classNameTile.for('tile-content'),
     key,
     children: assets.map(
       (tokenValue, index) =>
         new Component('div', {
-          className: 'tile-asset',
+          className: classNameTile.for('tile-asset'),
           key,
           style: { '--z-index': index + 1 },
           children: [new MAP_TILEMAP[tokenValue]({ key })],

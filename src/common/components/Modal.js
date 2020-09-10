@@ -79,7 +79,7 @@ export default function Modal(props) {
   this.onOpen = onOpen
   /** @type {import("../types").Component} */
   const content = new Component('div', {
-    className: 'content',
+    className: className.for('content'),
     children: ObservableState.observeTransform(
       [open, children],
       (isOpen, childNodes) => (isOpen ? childNodes : []),
@@ -98,17 +98,17 @@ export default function Modal(props) {
     classList: ObservableState.observeTransform(open, (isOpen) => {
       animating = animating || isOpen
       return {
-        open: isOpen,
-        close: !isOpen,
-        animating,
+        [className.for('open')]: isOpen,
+        [className.for('close')]: !isOpen,
+        [className.for('animating')]: animating,
       }
     }),
     children: [
       new Component('div', {
-        className: 'overlay',
+        className: className.for('overlay'),
       }),
       new Component('div', {
-        className: 'container',
+        className: className.for('container'),
         children: [content],
       }),
     ],
@@ -121,9 +121,9 @@ export default function Modal(props) {
     /** @type {HTMLElement} */
     const el = e.target
     const animation = el.parentNode.parentNode
-    const isClosing = animation.classList.contains('close')
+    const isClosing = animation.classList.contains(className.for('close'))
     if (isClosing) {
-      animation.classList.remove('animating')
+      animation.classList.remove(className.for('animating'))
     }
   })
   this.node = () => modal.node()

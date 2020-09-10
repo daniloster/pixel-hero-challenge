@@ -20,14 +20,29 @@ export default function CSS(selector) {
     RandomPrefix[random(100)]
   }__${selector}-${count}`
   this.styles = []
+  this.mapClasses = {}
   /** @type {HTMLElement} */
   this.styleMarkup = document.createElement('style')
+  this.styleMarkup.setAttribute('id', this.className)
   init(this.styleMarkup)
 }
 
 CSS.prototype.toString = function toString() {
   init(this.styleMarkup)
-  return this.className
+  return this.className.trim()
+}
+
+CSS.prototype.for = function (className) {
+  if (!className.trim()) {
+    return className
+  }
+
+  const pureClassName = clearClassNotation(className).trim()
+  if (!this.mapClasses[pureClassName]) {
+    this.mapClasses[pureClassName] = `${this.className}_${pureClassName}`
+  }
+
+  return className.replace(pureClassName, this.mapClasses[pureClassName])
 }
 
 /**
@@ -44,12 +59,17 @@ CSS.prototype.scope = function scope(...args) {
   }
   selector = Array.isArray(selector) ? selector : [selector]
   const index = this.styles.length
+  const namespace = this.className.trim()
   this.styles.push('')
 
   ObservableState.observeTransform(style || selector, (value) => {
     this.styles[index] = `${selector
-      .map((itemSelector) => ('.' + this.className + ' ' + itemSelector).trim())
-      .join(', ')} { ${value} }`
+      .map(
+        (itemSelector) =>
+          `.${namespace} ${parseItemSelector(this, itemSelector.trim())}`,
+      )
+      .join(', ')
+      .trim()} { ${value} }`
     this.styleMarkup.innerHTML = this.styles.join('\n\n')
   })
 }
@@ -62,14 +82,36 @@ CSS.prototype.scope = function scope(...args) {
 CSS.prototype.modifier = function modifier(selector, style) {
   const index = this.styles.length
   this.styles.push('')
+  const namespace = this.className.trim()
   const allSelector = Array.isArray(selector) ? selector : [selector]
 
   ObservableState.observeTransform(style, (value) => {
     this.styles[index] = `${allSelector
-      .map((itemSelector) => '.' + this.className + itemSelector)
-      .join(', ')} { ${value} }`
+      .map(
+        (itemSelector) =>
+          `.${namespace}${parseItemSelector(this, itemSelector.trim())}`,
+      )
+      .join(', ')
+      .trim()} { ${value} }`
     this.styleMarkup.innerHTML = this.styles.join('\n\n')
   })
+}
+
+function clearClassNotation(className) {
+  return className.replace(/^\./g, '')
+}
+
+function parseItemSelector(self, itemSelector) {
+  return itemSelector
+    .split('.')
+    .map((current, index) =>
+      (index === 0 && itemSelector.indexOf(current) !== 0) ||
+      !/^[a-z]/gi.test(current) ||
+      current === itemSelector
+        ? current
+        : self.for(current),
+    )
+    .join('.')
 }
 
 /**
@@ -91,10 +133,10 @@ CSS.global = function global(style) {
  * @param  {HTMLElement} element
  * @returns {void}
  */
-CSS.refreshAnimation = function refreshAnimation(element) {
-  element.classList.remove('animating')
+CSS.refreshAnimation = function refreshAnimation(element, className) {
+  element.classList.remove(className)
   void element.offsetWidth
-  element.classList.add('animating')
+  element.classList.add(className)
 }
 
 CSS.animation = animation

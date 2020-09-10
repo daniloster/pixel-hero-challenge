@@ -63,19 +63,19 @@ export default function GameRunning({ viewport, state, map }) {
         countDown.set(() => 3)
       }
       return {
-        initial: newState.includes(GameState.Initial),
-        running: newState.includes(GameState.Running),
+        [className.for('initial')]: newState.includes(GameState.Initial),
+        [className.for('running')]: newState.includes(GameState.Running),
       }
     }),
     children: [
       new Component('div', {
-        className: 'rendering-wrapper',
+        className: className.for('rendering-wrapper'),
         children: [
           new MapRendering({ tilemap, rows, columns, viewport, state }),
         ],
       }),
       new Component('div', {
-        className: 'rendering-wrapper',
+        className: className.for('rendering-wrapper'),
         children: [new CountDown({ countDown })],
       }),
     ],

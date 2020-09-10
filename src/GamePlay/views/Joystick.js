@@ -105,7 +105,7 @@ export default function Joystick({ joystick, state }) {
         click: joystick[direction],
         touchstart: preventDoubleTapZoom,
       },
-      className: `joysitck-pad-direction-${direction}`,
+      className: className.for(`joysitck-pad-direction-${direction}`),
       children: `<i class="fa fa-arrow-${direction}" aria-hidden="true"></i>`,
       html: true,
     })
@@ -113,13 +113,13 @@ export default function Joystick({ joystick, state }) {
   return new Component('div', {
     className,
     classList: ObservableState.observeTransform(state, (stateValues) => ({
-      'is-active': stateValues.includes(GameState.Running),
+      [className.for('is-active')]: stateValues.includes(GameState.Running),
     })),
     children: [
       new Component('div', {
         children: [
           new Component('div', {
-            className: 'joystick-pad',
+            className: className.for('joystick-pad'),
             children: [
               button('up'),
               button('right'),

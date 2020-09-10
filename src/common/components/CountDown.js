@@ -21,12 +21,12 @@ export default function CountDown({ countDown }) {
   animation.node().addEventListener('animationend', () => {
     countDown.set((old) => (old -= 1))
     const el = animation.node().parentNode
-    CSS.refreshAnimation(el)
+    CSS.refreshAnimation(el, className.for('animating'))
   })
   return new Component('div', {
     className,
     classList: ObservableState.observeTransform(countDown, (value) => ({
-      animating: value > -1,
+      [className.for('animating')]: value > -1,
     })),
     children: [animation],
   })

@@ -42,9 +42,9 @@ export default function GameFinished({
       (value, urlText, errorMessageText) => {
         const finished = value.includes(GameState.Succeed)
         return {
-          finished,
-          url: !!urlText,
-          error: !!errorMessageText,
+          [className.for('finished')]: finished,
+          [className.for('url')]: !!urlText,
+          [className.for('error')]: !!errorMessageText,
         }
       },
     ),
@@ -112,7 +112,7 @@ export default function GameFinished({
         children: [
           new Message({ message: errorMessage, isError: true }),
           new Component('div', {
-            className: 'share-url',
+            className: className.for('share-url'),
             children: [
               new Component('p', {
                 children: 'Copy and share with friends...',

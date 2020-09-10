@@ -140,10 +140,10 @@ export default function Grid(props) {
 
 function Headers({ columns, columnRenderer }) {
   return new Component('div', {
-    className: 'grid-wrapper-headers',
+    className: className.for('grid-wrapper-headers'),
     children: [
       new Component('div', {
-        className: 'grid-wrapper-row head',
+        className: className.for('grid-wrapper-row head'),
         children: columns.map((column) =>
           columnRenderer({
             column,
@@ -165,7 +165,7 @@ function Body({
   defaultWidth,
 }) {
   return new Component('div', {
-    className: 'grid-wrapper-body',
+    className: className.for('grid-wrapper-body'),
     children: ObservableState.observeTransform([data], (rows) =>
       rows.map((rowData, rowIndex) =>
         rowRenderer({
@@ -197,14 +197,16 @@ function defaultCellRenderer({
   const content = column[contentRendererIndex]({ rowData, sortedBy })
   return new Component('div', {
     key: `cell-${column.id}`,
-    className: `grid-wrapper-cell ${contentRendererIndex}`,
+    className: `${className.for('grid-wrapper-cell')} ${contentRendererIndex}`,
     style: { width: calculateWidth(column, defaultWidth) },
     children: [
       new Component('div', {
         className: ObservableState.observeTransform(
           sortedBy,
           (sortedById) =>
-            `grid-content-cell ${sortedById === column.id && 'sorted'}`,
+            `${className.for('grid-content-cell')} ${
+              sortedById === column.id && className.for('sorted')
+            }`,
         ),
         attrs: { 'data-column-id': column.id },
         events: contentRendererIndex === 'head' ? { click: onSort } : {},
@@ -227,7 +229,7 @@ function defaultCellRenderer({
 function defaultRowRenderer({ rowData, index = 0, columns, columnRenderer }) {
   return new Component('div', {
     key: rowData.id,
-    className: 'grid-wrapper-row',
+    className: className.for('grid-wrapper-row'),
     children: columns.map((column) =>
       columnRenderer({
         rowData,
@@ -253,7 +255,7 @@ function renderChildren({
   }
 
   return new Component('div', {
-    className: 'grid-wrapper-nested',
+    className: className.for('grid-wrapper-nested'),
     children: [
       rowRenderer({
         rowData,

@@ -14,7 +14,7 @@ import ValidationMessages from './validations/ValidationMessages'
 
 const classNameProof = new CSS('modal-map-editor-proof')
 classNameProof.scope(
-  '> .container > .content > div',
+  '> div > div > div',
   `
   width: 80vw;
   height: 80vh;
@@ -27,7 +27,7 @@ classNameProof.scope(
   `,
 )
 classNameProof.scope(
-  '> .container > .content > div > div',
+  '> div > div > div > div',
   `
   flex-grow: 1;
   flex-shrink: 1;
@@ -167,12 +167,12 @@ function MapSubmission({ tilemap }) {
     },
   })
   return new Component('div', {
-    className: 'MapSubmission',
+    className: className.for('MapSubmission'),
     children: [
       new Component('h3', { children: 'Validations' }),
       new ValidationMessages({ messages }),
       new Component('button', {
-        className: 'proof-button',
+        className: className.for('proof-button'),
         attrs: { type: 'button', disabled },
         events: {
           /**
@@ -191,7 +191,7 @@ function MapSubmission({ tilemap }) {
 
 function MapDefinitions({ tilemap, setTilemap }) {
   return new Component('div', {
-    className: 'MapEditorItem',
+    className: className.for('MapEditorItem'),
     children: [
       new Component('h3', { children: 'Map Definitions' }),
       new MapInput({ tilemap, setTilemap }),
@@ -201,7 +201,7 @@ function MapDefinitions({ tilemap, setTilemap }) {
 
 function MapOverview({ tilemap, columns, rows }) {
   return new Component('div', {
-    className: 'MapEditorItem',
+    className: className.for('MapEditorItem'),
     children: [
       new Component('h3', { children: 'Map Overview' }),
       new MapRendering({

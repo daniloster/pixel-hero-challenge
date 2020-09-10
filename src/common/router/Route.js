@@ -52,7 +52,7 @@ function toParams(currentPath, path) {
 
 const className = new CSS('route')
 className.scope('display: none;')
-className.modifier('.isActive', 'display: block;')
+className.modifier('.is-active', 'display: block;')
 
 export default function Route({ path, factoryPage }) {
   const routeMetadata = ObservableState.observeTransform(
@@ -67,7 +67,7 @@ export default function Route({ path, factoryPage }) {
     classList: ObservableState.observeTransform(
       routeMetadata,
       ([isActive]) => ({
-        isActive,
+        [className.for('is-active')]: isActive,
       }),
     ),
     children: ObservableState.observeTransform(

@@ -11,7 +11,7 @@ export default function Message({ message, isError = false }) {
     className,
     children: message,
     classList: {
-      'is-error': isError,
+      [className.for('is-error')]: isError,
     },
     style: {
       display: ObservableState.observeTransform(message, (val) =>

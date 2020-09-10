@@ -22,7 +22,7 @@ export default function MapInput({ tilemap, setTilemap }) {
           const key = `tilemap-${rowIndex}-${columnIndex}`
           childNodes.push(
             new TilemapCell({
-              className: 'tile',
+              className: className.for('tile'),
               key,
               rowIndex,
               columnIndex,
