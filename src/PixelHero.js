@@ -73,6 +73,16 @@ CSS.animation('modal-out')
 CSS.global(`
     html, body {
       max-height: 100vh;
+      // background: lightgray;
+    }
+    *:not(.fa) {
+      font-family: 'Press Start 2P', cursive;
+    }
+    .nes-btn.showcode {
+      position: absolute;
+      font-size: 12px;
+      bottom: 0px;
+      right: -4px;
     }
 `)
 
@@ -80,10 +90,14 @@ const className = new CSS('pixel-hero')
 className.modifier('.loaded .loading', 'display: none;')
 className.modifier('.loaded .game', 'display: block;')
 className.scope('.loading', 'display: block;')
+className.scope(
+  '.game.navigation > *:not(:last-child)',
+  'padding: 0 1rem 0 0; border-right: 1px solid;',
+)
 className.scope('.game', 'display: none; padding: 0.5rem 0;')
 className.scope('.game a:not(:last-child)', 'margin-right: 1rem;')
 className.scope('padding: 0.5rem;')
-className.scope('h1', 'padding: 0 0 1.5rem 0;')
+className.scope('h1', 'padding: 0 0 1rem 0; margin: 0; color: #F2B409;')
 
 export default function PixelHero() {
   const state = ObservableState.create('loading')
@@ -103,7 +117,7 @@ export default function PixelHero() {
       }),
       new Component('h1', { children: 'Pixel Hero' }),
       new Component('div', {
-        className: className.for('game'),
+        className: `${className.for('game')} ${className.for('navigation')}`,
         children: [
           new Link({ to: '/', children: 'Challenges' }),
           new Link({ to: '/editor', children: 'Create Map' }),

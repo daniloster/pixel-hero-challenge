@@ -10,6 +10,7 @@ className.scope(
     --bg-color: #92CD41;
     --shadow-color: #4AA52E;
     --hover-color: #76c442;
+    line-height: initial !important;
     background: var(--bg-color);
     display: inline-block;
     position: relative;

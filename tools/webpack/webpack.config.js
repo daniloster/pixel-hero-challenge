@@ -113,6 +113,8 @@ module.exports = {
     </style>
     <meta name="viewport" content="width=device-width">
     <link href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P" rel="stylesheet">
+    <!-- minify -->
+    <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet">
   </head>
   <body>
     <div id="root" />

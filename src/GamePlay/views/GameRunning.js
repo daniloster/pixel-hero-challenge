@@ -60,7 +60,7 @@ export default function GameRunning({ viewport, state, map }) {
     className,
     classList: ObservableState.observeTransform(state, (newState) => {
       if (newState.includes(GameState.Initial)) {
-        countDown.set(() => 30000)
+        countDown.set(() => 3)
       }
       return {
         [className.for('initial')]: newState.includes(GameState.Initial),

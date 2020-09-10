@@ -182,6 +182,11 @@ function MapSubmission({ messages, tilemap }) {
 
   return new Component('div', {
     className: className.for('MapSubmission'),
+    style: {
+      display: ObservableState.observeTransform(modal.state, (isOpen) =>
+        isOpen ? 'none' : 'flex',
+      ),
+    },
     children: [
       new Component('p', { children: 'Can you finish it?' }),
       new Button({
