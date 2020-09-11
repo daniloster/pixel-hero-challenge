@@ -97,6 +97,35 @@ CSS.prototype.modifier = function modifier(selector, style) {
   })
 }
 
+/**
+ * Adds scoped styles to pseudo element or class modifiers
+ * @param  {string} selector - when style is not present, selector is supposed to be style
+ * @param  {string} style
+ */
+CSS.prototype.media = function media(media, ...args) {
+  const index = this.styles.length
+  this.styles.push('')
+  const namespace = this.className.trim()
+  let [selector, style] = args
+  // if style is not present, selector gets styles
+  if (!style) {
+    style = selector
+    selector = ''
+  }
+  const allSelector = Array.isArray(selector) ? selector : [selector]
+
+  ObservableState.observeTransform(style, (value) => {
+    this.styles[index] = `@media ${media} { ${allSelector
+      .map(
+        (itemSelector) =>
+          `.${namespace} ${parseItemSelector(this, itemSelector.trim())}`,
+      )
+      .join(', ')
+      .trim()} { ${value} } }`
+    this.styleMarkup.innerHTML = this.styles.join('\n\n')
+  })
+}
+
 function clearClassNotation(className) {
   return className.replace(/^\./g, '')
 }

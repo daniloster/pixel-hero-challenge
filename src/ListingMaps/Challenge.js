@@ -8,14 +8,21 @@ import CSS from '../common/ui/CSS'
 import MapRendering from '../MapEditor/MapRendering'
 
 const className = new CSS('challenge')
-className.scope('display: flex; flex-wrap: wrap; flex-direction: row;')
+className.scope(
+  'display: flex; flex-wrap: wrap; flex-direction: row; width: 100%;',
+)
 className.scope(
   '.wrapper',
-  'display: flex; flex-wrap: wrap; flex-direction: row; min-width: 400px;',
+  'display: flex; flex-wrap: wrap; flex-direction: row; min-width: 100%;',
 )
 className.scope(
   '.information',
-  'display: flex; flex-wrap: wrap; flex-direction: column; width: 300px; height: 100px; padding-left: 1rem;',
+  'display: flex; flex-wrap: wrap; flex-direction: column; width: 300px; height: 100px; padding: 1rem 0 0.5rem 0;',
+)
+className.media(
+  'screen and (min-width: 500px)',
+  '.information',
+  'padding: 0 0 0 1rem;',
 )
 className.scope(
   ['.area', '.score', '.created-at'],
