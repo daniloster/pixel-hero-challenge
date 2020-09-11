@@ -85,7 +85,7 @@ export default function Challenge(item) {
             className: className.for('information'),
             children: [
               info(`Area (blocks²): ${item.dimension.toString()}`, 'area'),
-              info(`Score: ${item.dimension.toString()}`, 'score'),
+              info(`Score: ${item.score.toString()}`, 'score'),
               info(
                 `Created at: ${new Date(item.timestamp).toLocaleDateString()}`,
                 'created-at',
