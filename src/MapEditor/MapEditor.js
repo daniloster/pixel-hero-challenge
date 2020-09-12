@@ -202,21 +202,32 @@ function MapSubmission({ messages, tilemap }) {
 }
 
 const classNameProof = new StyleBuilder('modal-map-editor-proof')
-const flex = `
-flex-grow: 1;
-flex-shrink: 1;
-flex-basis: 100%;
-display: flex;
-`
-classNameProof.scope('> div > div > div')`
+classNameProof.scope('div.content-wrapper')`
 width: 80vw;
 height: 80vh;
 flex-direction: row;
 flex-flow: wrap;
-${flex}
+flex-grow: 1;
+flex-shrink: 1;
+flex-basis: 100%;
+display: flex;
+padding-top: 2.5rem;
 `
-classNameProof.scope('> div > div > div > div')`
-${flex} flex-direction: column; overflow-x: hidden;
+classNameProof.scope('.content-wrapper > div')`
+overflow-x: visible;
+display: flex;
+flex-direction: column;
+flex-grow: 1;
+flex-shrink: 1;
+flex-basis: 100%;
+`
+classNameProof.scope([
+  // game finished
+  '.content-wrapper > div > *:nth-child(1)',
+  // game over
+  '.content-wrapper > div > *:nth-child(2)',
+])`
+overflow-x: hidden;
 `
 
 function MapSubmissionGamePlay({ tilemap }) {
@@ -233,8 +244,8 @@ function MapSubmissionGamePlay({ tilemap }) {
     viewport: gameViewport,
   })
   const modalContent = new Component('div', {
+    className: classNameProof.for('content-wrapper'),
     children: [gamePlay],
-    style: { 'padding-top': '2.5rem' },
   })
   const modal = new Modal({
     className: classNameProof,

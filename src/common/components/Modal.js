@@ -67,6 +67,9 @@ className.scope(
 export default function Modal(props) {
   const {
     className: externalClassName = '',
+    overlayClassName = '',
+    containerClassName = '',
+    contentClassName = '',
     children = [],
     isInitiallyOpen = false,
     onClose = noop,
@@ -79,7 +82,7 @@ export default function Modal(props) {
   this.onOpen = onOpen
   /** @type {import("../types").Component} */
   const content = new Component('div', {
-    className: className.for('content'),
+    className: `${className.for('content')} ${contentClassName}`,
     children: ObservableState.observeTransform(
       [open, children],
       (isOpen, childNodes) => (isOpen ? childNodes : []),
@@ -105,10 +108,10 @@ export default function Modal(props) {
     }),
     children: [
       new Component('div', {
-        className: className.for('overlay'),
+        className: `${className.for('overlay')} ${overlayClassName}`,
       }),
       new Component('div', {
-        className: className.for('container'),
+        className: `${className.for('container')} ${containerClassName}`,
         children: [content],
       }),
     ],

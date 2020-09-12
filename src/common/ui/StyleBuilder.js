@@ -11,6 +11,11 @@ export default function StyleBuilder(namespace) {
 }
 
 /**
+ * @param {string} selector
+ * @return {string}
+ */
+StyleBuilder.prototype.for = (nextSelector) => null
+/**
  * @param {string} nextSelector
  * @return {StyleBuilder}
  */
