@@ -1,15 +1,16 @@
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
-import CSS from '../common/ui/CSS'
+import StyleBuilder from '../common/ui/StyleBuilder'
 import { MAX_COLUMNS, MAX_ROWS, MIN_COLUMNS, MIN_ROWS } from '../common/units'
 
 const COLUMN_ID = 'dimensionColumns'
 const ROW_ID = 'dimensionRows'
 
-const className = new CSS('map-dimension')
-className.scope(
-  '.MapDimensionLayout__slider',
-  `
+const className = new StyleBuilder('map-dimension')
+className`
+font-size: 0.6rem;
+`
+className.scope('.MapDimensionLayout__slider')`
   appearance: none;
   width: 100%;
   height: 15px;
@@ -20,17 +21,17 @@ className.scope(
   opacity: 0.7;
   transition: 0.2s;
   transition: opacity 0.2s;
-`,
-)
-className.scope(
-  'label',
-  `
+`
+className.scope('label')`
   display: block;
   padding: 0.5rem 0 0 0;
-`,
-)
-className.scope('label:first-child', 'padding: 0;')
-className.scope('label span:first-child', 'padding: 0 0 0.5rem 0;')
+`
+className.scope('label:first-child')`
+padding: 0;
+`
+className.scope('label span:first-child')`
+padding: 0 0 0.5rem 0;
+`
 const thumb = `
 appearance: none;
 appearance: none;
@@ -41,17 +42,14 @@ background: #F2C409;
 cursor: pointer;
 box-shadow: 0px 1px 16px -5px rgba(0,0,0,0.85);
 `
-className.scope('.MapDimensionLayout__slider::-webkit-slider-thumb', thumb)
-className.scope('.MapDimensionLayout__slider::-moz-range-thumb', thumb)
-className.scope(
-  '.MapDimensionLayout__limits',
-  `
+className.scope('.MapDimensionLayout__slider::-webkit-slider-thumb')(thumb)
+className.scope('.MapDimensionLayout__slider::-moz-range-thumb')(thumb)
+className.scope('.MapDimensionLayout__limits')`
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0 0 0;
-`,
-)
+`
 
 export default function MapDimension({
   className: externalClassName = '',

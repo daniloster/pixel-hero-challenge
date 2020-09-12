@@ -67,7 +67,8 @@
     "worker-plugin": "5.0.0"
   },
   "dependencies": {
-    "mutation-helper": "1.0.0"
+    "mutation-helper": "1.0.0",
+    "popper.js": "1.16.1"
   },
   "resolutions": {
     "jsdom": "16.2.2"

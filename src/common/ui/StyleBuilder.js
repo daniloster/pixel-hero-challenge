@@ -44,7 +44,6 @@ function buildContext(context, css, macro, selector = '') {
    */
   const shortcut = (styles) => {
     const values = Array.isArray(styles) ? styles.join('').trim() : styles
-    console.log({ context, css, macro, selector, styles: values })
     if (selector) {
       css[macro](selector, values)
       return shortcut

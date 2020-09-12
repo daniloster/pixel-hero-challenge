@@ -3,11 +3,8 @@ import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
 import { UNIT_SIZE } from '../common/units'
 import GameState from '../GamePlay/GameState'
-import MoveableBox from './tile/MoveableBox'
-import Player from './tile/Player'
-import RescuableBox from './tile/RescuableBox'
-import RescuePoint from './tile/RescuePoint'
-import Wall, { WALL_COLOR } from './tile/Wall'
+import MAP_TILEMAP from './MAP_TILEMAP'
+import { WALL_COLOR } from './tile/Wall'
 import { Dictionary } from './Tilemap'
 
 const className = new CSS('map-rendering')
@@ -52,6 +49,7 @@ function defaultUnit({ target, viewport }) {
 }
 
 export default function MapRendering({
+  cellRenderer = ({ key, column, row, children }) => children,
   viewport,
   columns,
   rows,
@@ -77,6 +75,7 @@ export default function MapRendering({
                   column: columnIndex,
                   row: rowIndex,
                   tilemap,
+                  cellRenderer,
                 }),
               ),
           )
@@ -140,7 +139,7 @@ classNameTile.scope(
 )
 classNameTile.scope('.tile-asset > *', 'width: 100%; height: 100%;')
 
-function Tile({ key, column, row, style, tilemap }) {
+function Tile({ cellRenderer, key, column, row, tilemap }) {
   const tokens = ObservableState.observeTransform(
     tilemap,
     (tilemapValues) => (tilemapValues[row] || [])[column] || [Dictionary.None],
@@ -161,7 +160,7 @@ function Tile({ key, column, row, style, tilemap }) {
   return new Component('div', {
     key,
     className: classNameTile,
-    children,
+    children: cellRenderer({ key, column, row, children }),
     style: { '--row': row, '--column': column },
     attrs: {
       'data-testid': ObservableState.observeTransform(
@@ -186,13 +185,4 @@ function TileContent({ key, assets }) {
         }),
     ),
   })
-}
-
-const MAP_TILEMAP = {
-  [Dictionary.MoveableBox]: MoveableBox,
-  [Dictionary.RescuableBox]: RescuableBox,
-  [Dictionary.Player]: Player,
-  [Dictionary.RescuePoint]: RescuePoint,
-  [Dictionary.Wall]: Wall,
-  [Dictionary.None]: (props) => new Component('div', props),
 }

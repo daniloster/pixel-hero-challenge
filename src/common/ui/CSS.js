@@ -30,7 +30,9 @@ export default function CSS(selector) {
 CSS.prototype.with = function (...args) {
   return args
     .map((className) =>
-      Array.isArray(className) ? className.join(' ') : this.for(className),
+      Array.isArray(className)
+        ? className.filter((valid) => !!valid).join(' ')
+        : this.for(className),
     )
     .concat(this.className)
     .join(' ')
@@ -127,7 +129,6 @@ function clearClassNotation(className) {
 }
 
 function parseItemSelector(self, itemSelector) {
-  console.log({ itemSelector })
   return itemSelector
     .split('.')
     .map((current, index) =>

@@ -6,9 +6,12 @@ import CSS from '../../common/ui/CSS'
 const className = new CSS('validation-messages')
 className.scope('color: red; width: 100%;')
 
-export default function ValidationMessages({ messages }) {
+export default function ValidationMessages({
+  className: extClassName,
+  messages,
+}) {
   return new Component('div', {
-    className,
+    className: className.with([extClassName]),
     children: [
       new Component('ul', {
         children: ObservableState.observeTransform(messages, (values) =>

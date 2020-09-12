@@ -13,7 +13,8 @@ function onClickOutside(e) {
       const isClickingOutside =
         container &&
         !container.contains(e.target) &&
-        document.body.contains(e.target)
+        document.body.contains(e.target) &&
+        document.body.contains(container)
       hook(e, isClickingOutside)
       if (!document.body.contains(container)) {
         unsubscribe()

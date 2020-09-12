@@ -149,7 +149,7 @@ export default function PixelHero() {
       }),
       new Component('h1', { children: 'Pixel Hero' }),
       new Component('div', {
-        className: `${className.for('game')} ${className.for('navigation')}`,
+        className: className.with('game', 'navigation'),
         children: [
           new Link({ to: '/', children: 'Challenges' }),
           new Link({ to: '/editor', children: 'Create Map' }),
