@@ -51,16 +51,16 @@ describe('CSS', () => {
     )
   })
 
-  test('if CSS creates content with modifier non-class', () => {
+  test('if CSS creates content with scope mixed classes and elements', () => {
     const className = new CSS('example')
-    className.modifier(':hover', 'padding: 0;')
+    className.scope('a.rocks', 'padding: 0;')
 
     expect(className.styleMarkup.innerHTML).toMatch(
-      `.${className}:hover { padding: 0; }`,
+      `.${className} a.${className}_rocks { padding: 0; }`,
     )
   })
 
-  test('if CSS creates content with modifier non-class', () => {
+  test('if CSS creates content with modifier pseudo elements', () => {
     const className = new CSS('example')
     className.modifier(':hover', 'padding: 0;')
 

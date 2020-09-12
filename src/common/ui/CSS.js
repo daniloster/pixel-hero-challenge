@@ -118,12 +118,12 @@ function clearClassNotation(className) {
 }
 
 function parseItemSelector(self, itemSelector) {
+  console.log({ itemSelector })
   return itemSelector
     .split('.')
     .map((current, index) =>
-      (index === 0 && itemSelector.indexOf(current) !== 0) ||
-      !/^[a-z]/gi.test(current) ||
-      current === itemSelector
+      (index === 0 && itemSelector.indexOf(current) === 0) ||
+      !/^[a-z]/gi.test(current)
         ? current
         : self.for(current),
     )
