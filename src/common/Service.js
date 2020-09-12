@@ -115,10 +115,12 @@ function listMaps(page = 0, total) {
           .limitToLast(PAGE_SIZE)
           .once('value', (snapshot) => {
             resolve(
-              Object.values(snapshot.val()).map((mapDefinition) => ({
-                ...mapDefinition,
-                tilemap: deserializeMapFromId(mapDefinition.serialized),
-              })),
+              Object.values(snapshot.val())
+                .map((mapDefinition) => ({
+                  ...mapDefinition,
+                  tilemap: deserializeMapFromId(mapDefinition.serialized),
+                }))
+                .reverse(),
             )
           })
       }
