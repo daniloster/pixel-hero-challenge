@@ -17,18 +17,25 @@ export interface TransformerState<T> {
   (state: T): T
 }
 
-export interface ObservableState<T> {
-  get: () => T
-  set: (transformer: TransformerState<T>) => void
-  subscribe: (subscriber: Subscriber<T>) => Subscription
-  observe: (
+export interface StaticObservableState<T> {
+  static observe: (
     value: T | ObservableState<T>,
     subscriber: Subscriber<T>,
   ) => Subscription
-  observeTransform: (
+  static observeTransform: (
     value: T | ObservableState<T>,
     subscriber: Subscriber<T>,
   ) => ObservableState<K>
+  static create: (initialValue: T) => WritableObservableState<T>
+}
+
+export interface ObservableState<T> extends StaticObservableState<T> {
+  get: () => T
+  subscribe: (subscriber: Subscriber<T>) => Subscription
+}
+
+export interface WritableObservableState<T> extends ObservableState<T> {
+  set: (transformer: TransformerState<T>) => void
 }
 
 export interface Events {

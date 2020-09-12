@@ -70,13 +70,11 @@ className.scope('.MapDefinitions', 'padding: 0 0 1rem 0.5rem; width: 65%;')
 className.scope('.MapOverview', '')
 
 export default function MapEditor() {
-  const observableState = ObservableState.observeTransform([
-    {
-      columns: 3,
-      rows: 3,
-      tilemap: factoryTilemap(3, 3),
-    },
-  ])
+  const observableState = ObservableState.create({
+    columns: 3,
+    rows: 3,
+    tilemap: factoryTilemap(3, 3),
+  })
   const mapDimensionActions = {
     onChangeColumns: (e) =>
       observableState.set((old) => ({
@@ -227,7 +225,7 @@ classNameProof.scope(
 )
 classNameProof.scope(
   '> div > div > div > div',
-  `${flex} flex-direction: column;`,
+  `${flex} flex-direction: column; overflow-x: hidden;`,
 )
 function MapSubmissionGamePlay({ tilemap }) {
   const gameViewport = {

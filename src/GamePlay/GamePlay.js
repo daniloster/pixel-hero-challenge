@@ -16,9 +16,15 @@ const FPS = 25
 const INTERVAL = 1000 / FPS
 
 function useGameMap(serialized) {
-  return ObservableState.observeTransform(serialized, (json) =>
-    JSON.parse(json),
-  )
+  const gameMap = ObservableState.create(null)
+  if (serialized instanceof ObservableState) {
+    ObservableState.observeSync(serialized, (json) =>
+      gameMap.set(() => JSON.parse(json)),
+    )
+  } else {
+    gameMap.set(() => serialized)
+  }
+  return gameMap
 }
 
 function useGameLoop(map) {
@@ -34,7 +40,7 @@ function useGameLoop(map) {
     }
   }
   let gameLoopRef = null
-  const mapState = ObservableState.observeTransform(getMapCopy(map))
+  const mapState = ObservableState.create(getMapCopy(map))
   const gameState = ObservableState.create([GameState.Initial])
   const restart = () => {
     mapState.set(() => getMapCopy(map))

@@ -1,3 +1,5 @@
+export default ObservableState
+
 class Subject {
   constructor() {
     this.subscribers = []
@@ -23,25 +25,11 @@ class Subject {
   }
 }
 
-export default ObservableState
-
 /** @type {import("./types").ObservableState} */
 function ObservableState() {}
-
 ObservableState.prototype.get = () => null
-ObservableState.prototype.set = () => null
 ObservableState.prototype.subscribe = (subscriber) => () => null
-ObservableState.observe = (value, next) => observe(value, next, false)
-ObservableState.observeSync = (value, next, hash) => observe(value, next, hash)
-ObservableState.observeTransform = (observableChain, transform) =>
-  observeTransform(observableChain, transform, false)
-ObservableState.observeTransformSync = (observableChain, transform, hash) =>
-  observeTransform(observableChain, transform, hash)
-/**
- * @param {T} initialValue
- * @returns {import('@daniloster/i18n/lib/types').ObservableState<T>}
- * @template T
- */
+
 ObservableState.create = (initialValue) => {
   let value = initialValue
   const subject = new Subject()
@@ -58,6 +46,12 @@ ObservableState.create = (initialValue) => {
   observableState.subscribe = (subscriber) => subject.subscribe(subscriber)
   return observableState
 }
+ObservableState.observe = (value, next) => observe(value, next, false)
+ObservableState.observeSync = (value, next, hash) => observe(value, next, hash)
+ObservableState.observeTransform = (observableChain, transform) =>
+  observeTransform(observableChain, transform, false)
+ObservableState.observeTransformSync = (observableChain, transform, hash) =>
+  observeTransform(observableChain, transform, hash)
 
 function isEqual(node, oldNode, hash) {
   if (oldNode === undefined) {
@@ -116,12 +110,20 @@ function observe(value, next, hash) {
   }
 }
 
+const setRef = Symbol('set')
 function observeTransform(observableChain, transform, hash) {
   const observable = ObservableState.create(null)
+  Object.defineProperty(observable, setRef, {
+    writable: false,
+    enumerable: false,
+    configurable: false,
+    value: observable.set,
+  })
+  delete observable.set
   observable.unsubscribe = observe(
     observableChain,
     (...values) => {
-      observable.set((old) => (transform || ((v) => v))(...values, old))
+      observable[setRef]((old) => (transform || ((v) => v))(...values, old))
     },
     hash,
   )

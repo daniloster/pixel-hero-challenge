@@ -20,7 +20,10 @@ className.scope(`
 `)
 className.modifier('.is-active', 'display: flex;')
 className.scope('> *', 'box-sizing: border-box;')
-className.scope('> div', 'position: relative; width: 30vw; height: 30vh;')
+className.scope(
+  '> div',
+  'position: relative; width: 30vw; height: 30vh; display: flex; justify-content: center; align-items: center;',
+)
 className.scope(
   '.joystick-pad',
   `
