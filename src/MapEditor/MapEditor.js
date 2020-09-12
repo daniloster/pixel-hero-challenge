@@ -3,7 +3,7 @@ import Button from '../common/components/Button'
 import Modal from '../common/components/Modal'
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
-import CSS from '../common/ui/CSS'
+import StyleBuilder from '../common/ui/StyleBuilder'
 import GamePlay from '../GamePlay/GamePlay'
 import MapDimension from './MapDimension'
 import MapInput from './MapInput'
@@ -13,27 +13,24 @@ import isButtonDisabled from './validations/isButtonDisabled'
 import toValidationMessages from './validations/toValidationMessages'
 import ValidationMessages from './validations/ValidationMessages'
 
-const className = new CSS('map-editor')
-className.scope(`
+const className = new StyleBuilder('map-editor')
+className`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: 100%;
-`)
-className.scope('.proof-button', 'padding: 0.7rem;')
-className.scope(
-  'h2',
-  `
+`
+className.scope('.proof-button')`
+padding: 0.7rem;
+`
+className.scope('h2')`
   padding: 0 0 1rem 0;
   width: 100%;
-`,
-)
+`
 
-className.scope(
-  '.MapSubmission',
-  `
+className.scope('.MapSubmission')`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -48,26 +45,24 @@ className.scope(
   background-color: rgba(0, 0, 0, 0.6);
   box-shadow: 0px 1px 45px -5px rgba(0,0,0,0.75);
   border-top: 1px solid rgba(0, 0, 0, 0.3);
-`,
-)
+`
 className.scope(
   '.MapSubmission p',
-  `color: #fff; font-size: 1rem; padding: 0 1rem; margin: 0;`,
-)
-className.scope(
-  '.MapEditorItem',
-  `
+)`color: #fff; font-size: 1rem; padding: 0 1rem; margin: 0;`
+className.scope('.MapEditorItem')`
   display: inline-block;
   width: 50%;
-`,
-)
-className.scope(
-  ['.MapDimension', '.MapDefinitions'],
-  'display: inline-flex; flex-direction: column;',
-)
-className.scope('.MapDimension', 'padding: 0 0.5rem 1rem 0; width: 35%;')
-className.scope('.MapDefinitions', 'padding: 0 0 1rem 0.5rem; width: 65%;')
-className.scope('.MapOverview', '')
+`
+className.scope(['.MapDimension', '.MapDefinitions'])`
+  display: inline-flex; flex-direction: column;
+`
+className.scope('.MapDimension')`
+padding: 0 0.5rem 1rem 0; width: 35%;
+`
+className.scope('.MapDefinitions')`
+padding: 0 0 1rem 0.5rem; width: 65%;
+`
+className.scope('.MapOverview')`display: block;`
 
 export default function MapEditor() {
   const observableState = ObservableState.create({
@@ -206,27 +201,24 @@ function MapSubmission({ messages, tilemap }) {
   })
 }
 
-const classNameProof = new CSS('modal-map-editor-proof')
+const classNameProof = new StyleBuilder('modal-map-editor-proof')
 const flex = `
 flex-grow: 1;
 flex-shrink: 1;
 flex-basis: 100%;
 display: flex;
 `
-classNameProof.scope(
-  '> div > div > div',
-  `
-  width: 80vw;
-  height: 80vh;
-  flex-direction: row;
-  flex-flow: wrap;
-  ${flex}
-  `,
-)
-classNameProof.scope(
-  '> div > div > div > div',
-  `${flex} flex-direction: column; overflow-x: hidden;`,
-)
+classNameProof.scope('> div > div > div')`
+width: 80vw;
+height: 80vh;
+flex-direction: row;
+flex-flow: wrap;
+${flex}
+`
+classNameProof.scope('> div > div > div > div')`
+${flex} flex-direction: column; overflow-x: hidden;
+`
+
 function MapSubmissionGamePlay({ tilemap }) {
   const gameViewport = {
     width: () => window.innerWidth * 0.8,
