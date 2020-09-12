@@ -50,7 +50,7 @@ function buildContext(context, css, macro, selector = '') {
       shortcut,
       css,
       macro === 'modifier' ? macro : 'scope',
-      `${selector.trim()} ${nextSelector.trim()}`,
+      combine(' ', selector, nextSelector),
     )
   }
   shortcut.modifier = (nextSelector) => {
@@ -59,7 +59,7 @@ function buildContext(context, css, macro, selector = '') {
       shortcut,
       css,
       'modifier',
-      `${selector.trim()}${nextSelector.trim()}`,
+      combine('', selector, nextSelector),
     )
   }
   shortcut.media = (nextSelector) => {
@@ -73,8 +73,21 @@ function buildContext(context, css, macro, selector = '') {
   return shortcut
 }
 
+function combine(separator, parentSelector, selector) {
+  if (Array.isArray(parentSelector)) {
+    return selector.map((current) => combine(separator, current, selector))
+  }
+  if (Array.isArray(selector)) {
+    return selector.map((current) =>
+      combine(separator, parentSelector, current),
+    )
+  }
+
+  return `${parentSelector.trim()}${separator}${selector.trim()}`
+}
+
 function validateSelector(selector) {
-  if (!selector || !selector.trim()) {
+  if (!Array.isArray(selector) && (!selector || !selector.trim())) {
     throw new Error(`[StyleBuilder] selector is required for builder`)
   }
 }
