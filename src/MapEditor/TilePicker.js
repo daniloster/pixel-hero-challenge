@@ -18,6 +18,7 @@ className.scope('.content')`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  box-shadow: 0 0 1rem 1px rgba(0, 0, 0, 0.4);
 `
 className.scope('button')`
   width: 100px;
