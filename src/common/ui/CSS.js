@@ -27,6 +27,15 @@ export default function CSS(selector) {
   init(this.styleMarkup)
 }
 
+CSS.prototype.with = function (...args) {
+  return args
+    .map((className) =>
+      Array.isArray(className) ? className.join(' ') : this.for(className),
+    )
+    .concat(this.className)
+    .join(' ')
+}
+
 CSS.prototype.toString = function toString() {
   init(this.styleMarkup)
   return this.className.trim()

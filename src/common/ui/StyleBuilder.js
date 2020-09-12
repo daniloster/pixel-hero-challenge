@@ -16,6 +16,11 @@ export default function StyleBuilder(namespace) {
  */
 StyleBuilder.prototype.for = (nextSelector) => null
 /**
+ * @param {Array<string|Array<string>>} args
+ * @return {string}
+ */
+StyleBuilder.prototype.with = (...args) => null
+/**
  * @param {string} nextSelector
  * @return {StyleBuilder}
  */
@@ -72,6 +77,7 @@ function buildContext(context, css, macro, selector = '') {
     return buildContext(shortcut, css, 'media', nextSelector.trim())
   }
   shortcut.for = (...args) => css.for(...args)
+  shortcut.with = (...args) => css.with(...args)
   shortcut.pop = () => (context ? context : shortcut)
   shortcut.toString = () => css.toString()
 
