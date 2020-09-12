@@ -2,6 +2,26 @@ path / {
   read() { auth != null }
   write() { auth != null && prior(this) == null && this != null }
 }
+path /users {
+  read() { true }
+  write() { auth != null && prior(this) == null && this != null }
+}
+
+path /users/{uid} {
+  read() { true }
+  write() { auth != null && prior(this) == null && this != null && auth.uid == uid }
+}
+
+path /users/{uid}/score {
+  read() { true }
+  write() { auth != null && prior(this) == null && this != null && auth.uid == uid }
+}
+
+path /users/{uid}/score/{id} {
+  read() { true }
+  write() { auth != null && prior(this) == null && this != null && auth.uid == uid }
+}
+
 path /saved_maps {
   read() { true }
   write() { auth != null && prior(this) == null && this != null }

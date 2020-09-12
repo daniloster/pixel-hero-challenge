@@ -2,6 +2,22 @@
   "rules": {
     ".read": "auth != null",
     ".write": "((auth != null && data.val() == null) && newData.val() != null)",
+    "users": {
+      ".read": "true",
+      ".write": "((auth != null && data.val() == null) && newData.val() != null)",
+      "$uid": {
+        ".read": "true",
+        ".write": "(((auth != null && data.val() == null) && newData.val() != null) && auth.uid == $uid)",
+        "score": {
+          ".read": "true",
+          ".write": "(((auth != null && data.val() == null) && newData.val() != null) && auth.uid == $uid)",
+          "$id": {
+            ".read": "true",
+            ".write": "(((auth != null && data.val() == null) && newData.val() != null) && auth.uid == $uid)"
+          }
+        }
+      }
+    },
     "saved_maps": {
       ".read": "true",
       ".write": "((auth != null && data.val() == null) && newData.val() != null)",

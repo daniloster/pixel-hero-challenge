@@ -147,10 +147,45 @@ function getMap(id) {
   })
 }
 
+function score(id) {
+  return new Promise((resolve, reject) => {
+    const unsubscriber = ObservableState.observe(uid, (uidValue) => {
+      if (uidValue) {
+        setTimeout(() => unsubscriber.unsubscribe())
+
+        const userScoreRef = firebase
+          .database()
+          .ref(`users/${uidValue}/score/${id}`)
+        userScoreRef.transaction(
+          () => true,
+          (errorUser, commitedUser) => {
+            if (!errorUser && commitedUser) {
+              const scoreRef = firebase.database().ref(`maps/${id}/score`)
+              scoreRef.transaction(
+                (score) => (score || 0) + 1,
+                (error, committed) => {
+                  if (error || !committed) {
+                    console.error(error)
+                    reject(error)
+                  } else {
+                    console.log('scored')
+                    resolve()
+                  }
+                },
+              )
+            }
+          },
+        )
+      }
+    })
+  })
+}
+
 export default {
   init,
   syncCountMaps,
   getMap,
   listMaps,
   saveMap,
+  score,
 }

@@ -45,6 +45,7 @@ export default function GamePlayById({ id }) {
   state.subscribe({
     next: (values) => {
       if (values.includes(GameState.Succeed)) {
+        Service.score(id)
         Confetti.start()
       } else {
         Confetti.stop()
