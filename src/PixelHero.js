@@ -1,4 +1,6 @@
+import Confetti from './common/Confetti'
 import ObservableState from './common/ObservableState'
+import history from './common/router/history'
 import Link from './common/router/Link'
 import Router from './common/router/Router'
 import Service from './common/Service'
@@ -110,6 +112,12 @@ export default function PixelHero() {
 
   Service.init(state)
   Service.syncCountMaps()
+
+  history.onChange((pathname) => {
+    if (!/^\/challenge\//gi.test(pathname)) {
+      Confetti.stop()
+    }
+  })
 
   return new Component('div', {
     className: ObservableState.observeTransform(
