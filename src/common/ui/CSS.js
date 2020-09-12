@@ -50,8 +50,44 @@ CSS.prototype.for = function (className) {
  * @param  {string} selector - when style is not present, selector is supposed to be style
  * @param  {string} style
  */
-CSS.prototype.scope = function scope(...args) {
-  let [selector, style] = args
+CSS.prototype.scope = function (...args) {
+  return applyStyle.apply(this, [(value) => value, ' '].concat(args))
+}
+
+/**
+ * Adds scoped styles to pseudo element or class modifiers
+ * @param  {string} selector - when style is not present, selector is supposed to be style
+ * @param  {string} style
+ */
+CSS.prototype.modifier = function (...args) {
+  if (args.length < 2) {
+    throw new Error(`[CSS] modifier require (selector: string, style: string)`)
+  }
+  return applyStyle.apply(this, [(value) => value, ''].concat(args))
+}
+
+/**
+ * Adds scoped styles to pseudo element or class modifiers
+ * @param  {string} selector - when style is not present, selector is supposed to be style
+ * @param  {string} style
+ */
+CSS.prototype.media = function (media, ...args) {
+  if (args.length < 2) {
+    throw new Error(
+      `[CSS] media require (media: string, selector?: string, style: string)`,
+    )
+  }
+  return applyStyle.apply(
+    this,
+    [
+      (value) => `@media ${media} { ${value} }`,
+      args.length === 2 ? '' : ' ',
+    ].concat(args),
+  )
+}
+
+function applyStyle(...args) {
+  let [wrap, separator, selector, style] = args
   // if style is not present, selector gets styles
   if (!style) {
     style = selector
@@ -66,63 +102,14 @@ CSS.prototype.scope = function scope(...args) {
     this.styles[index] = `${selector
       .map(
         (itemSelector) =>
-          `.${namespace} ${parseItemSelector(this, itemSelector.trim())}`,
+          `.${namespace}${separator}${parseItemSelector(
+            this,
+            itemSelector.trim(),
+          )}`,
       )
       .join(', ')
       .trim()} { ${value} }`
-    this.styleMarkup.innerHTML = this.styles.join('\n\n')
-  })
-}
-
-/**
- * Adds scoped styles to pseudo element or class modifiers
- * @param  {string} selector - when style is not present, selector is supposed to be style
- * @param  {string} style
- */
-CSS.prototype.modifier = function modifier(selector, style) {
-  const index = this.styles.length
-  this.styles.push('')
-  const namespace = this.className.trim()
-  const allSelector = Array.isArray(selector) ? selector : [selector]
-
-  ObservableState.observeTransform(style, (value) => {
-    this.styles[index] = `${allSelector
-      .map(
-        (itemSelector) =>
-          `.${namespace}${parseItemSelector(this, itemSelector.trim())}`,
-      )
-      .join(', ')
-      .trim()} { ${value} }`
-    this.styleMarkup.innerHTML = this.styles.join('\n\n')
-  })
-}
-
-/**
- * Adds scoped styles to pseudo element or class modifiers
- * @param  {string} selector - when style is not present, selector is supposed to be style
- * @param  {string} style
- */
-CSS.prototype.media = function media(media, ...args) {
-  const index = this.styles.length
-  this.styles.push('')
-  const namespace = this.className.trim()
-  let [selector, style] = args
-  // if style is not present, selector gets styles
-  if (!style) {
-    style = selector
-    selector = ''
-  }
-  const allSelector = Array.isArray(selector) ? selector : [selector]
-
-  ObservableState.observeTransform(style, (value) => {
-    this.styles[index] = `@media ${media} { ${allSelector
-      .map(
-        (itemSelector) =>
-          `.${namespace} ${parseItemSelector(this, itemSelector.trim())}`,
-      )
-      .join(', ')
-      .trim()} { ${value} } }`
-    this.styleMarkup.innerHTML = this.styles.join('\n\n')
+    this.styleMarkup.innerHTML = wrap(this.styles.join('\n\n'))
   })
 }
 
