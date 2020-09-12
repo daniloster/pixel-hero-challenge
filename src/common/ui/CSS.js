@@ -83,7 +83,7 @@ CSS.prototype.modifier = function (...args) {
  * @param  {string} style
  */
 CSS.prototype.media = function (media, ...args) {
-  if (args.length < 2) {
+  if (args.length < 1) {
     throw new Error(
       `[CSS] media require (media: string, selector?: string, style: string)`,
     )
@@ -92,7 +92,7 @@ CSS.prototype.media = function (media, ...args) {
     this,
     [
       (value) => `@media ${media} { ${value} }`,
-      args.length === 2 ? '' : ' ',
+      args.length === 1 || args[0].charAt(0) === ':' ? '' : ' ',
     ].concat(args),
   )
 }
@@ -110,17 +110,19 @@ function applyStyle(...args) {
   this.styles.push('')
 
   ObservableState.observeTransform(style || selector, (value) => {
-    this.styles[index] = `${selector
-      .map(
-        (itemSelector) =>
-          `.${namespace}${separator}${parseItemSelector(
-            this,
-            itemSelector.trim(),
-          )}`,
-      )
-      .join(', ')
-      .trim()} { ${value} }`
-    this.styleMarkup.innerHTML = wrap(this.styles.join('\n\n'))
+    this.styles[index] = wrap(
+      `${selector
+        .map(
+          (itemSelector) =>
+            `.${namespace}${separator}${parseItemSelector(
+              this,
+              itemSelector.trim(),
+            )}`,
+        )
+        .join(', ')
+        .trim()} { ${value} }`,
+    )
+    this.styleMarkup.innerHTML = this.styles.join('\n\n')
   })
 }
 

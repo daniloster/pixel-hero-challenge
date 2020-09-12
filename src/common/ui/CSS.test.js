@@ -68,4 +68,39 @@ describe('CSS', () => {
       `.${className}:hover { padding: 0; }`,
     )
   })
+
+  test('if CSS creates media content content with modifier pseudo elements', () => {
+    const className = new CSS('example')
+    className.media('screen and (min-width: 300px)', ':hover', 'padding: 0;')
+
+    expect(className.styleMarkup.innerHTML).toMatch(
+      `@media screen and (min-width: 300px) { .${className}:hover { padding: 0; } }`,
+    )
+  })
+
+  test('if CSS creates media content with scoped elements', () => {
+    const className = new CSS('example')
+    className.media(
+      'screen and (min-width: 300px)',
+      '.scoped-class:hover',
+      'padding: 0;',
+    )
+
+    expect(className.styleMarkup.innerHTML).toMatch(
+      `@media screen and (min-width: 300px) { .${className} .${className}_scoped-class:hover { padding: 0; } }`,
+    )
+  })
+
+  test('if CSS creates media big content with scoped elements', () => {
+    const className = new CSS('example')
+    className.media(
+      'screen and (min-width: 500px)',
+      '.games',
+      'grid-template-columns: repeat(auto-fit, 480px);',
+    )
+
+    expect(className.styleMarkup.innerHTML).toMatch(
+      `@media screen and (min-width: 500px) { .${className} .${className}_games { grid-template-columns: repeat(auto-fit, 480px); } }`,
+    )
+  })
 })
