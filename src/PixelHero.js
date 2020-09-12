@@ -6,6 +6,7 @@ import Router from './common/router/Router'
 import Service from './common/Service'
 import Component from './common/ui/Component'
 import CSS from './common/ui/CSS'
+import StyleBuilder from './common/ui/StyleBuilder'
 import GamePlayById from './GamePlay/views/GamePlayById'
 import ListingMaps from './ListingMaps/ListingMaps'
 import MapEditor from './MapEditor/MapEditor'
@@ -72,7 +73,7 @@ CSS.animation('modal-out')
   .step('100%', 'transform: scale(0.1); opacity: 0;')
   .build()
 
-CSS.global(`
+CSS.global`
     html, body {
       max-height: 100vh;
       // background: lightgray;
@@ -92,20 +93,37 @@ CSS.global(`
       bottom: 0px;
       right: -4px;
     }
-`)
+`
 
-const className = new CSS('pixel-hero')
-className.modifier('.loaded .loading', 'display: none;')
-className.modifier('.loaded .game', 'display: block;')
-className.scope('.loading', 'display: block;')
-className.scope(
-  '.game.navigation > *:not(:last-child)',
-  'padding: 0 1rem 0 0; border-right: 1px solid;',
-)
-className.scope('.game', 'display: none; padding: 0.5rem 0;')
-className.scope('.game a:not(:last-child)', 'margin-right: 1rem;')
-className.scope('padding: 0.5rem;')
-className.scope('h1', 'padding: 0 0 1rem 0; margin: 0; color: #F2B409;')
+const className = new StyleBuilder('pixel-hero')
+className`
+  padding: 0.5rem;
+  `.scope('h1')`
+    padding: 0 0 1rem 0;
+    margin: 0;
+    color: #F2B409;
+    `
+className.scope('.game')`
+  display: none;
+  padding: 0.5rem 0;
+  `.modifier('.navigation > *:not(:last-child)')`
+    padding: 0 1rem 0 0;
+    border-right: 1px solid;
+    `
+  .pop()
+  .scope('a:not(:last-child)')`
+    margin-right: 1rem;
+    `
+className.modifier('.loaded').scope('.loading')`
+    display: none;
+    `
+  .pop()
+  .scope('.game')`
+    display: block;
+    `
+className.scope('.loading')`
+display: block;
+`
 
 export default function PixelHero() {
   const state = ObservableState.create('loading')
