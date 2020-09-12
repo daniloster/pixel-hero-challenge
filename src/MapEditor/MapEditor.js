@@ -1,15 +1,12 @@
-import Popper from 'popper.js'
 import Button from '../common/components/Button'
 import Modal from '../common/components/Modal'
-import useClickOutside from '../common/components/useClickOutside'
 import ObservableState from '../common/ObservableState'
 import Component from '../common/ui/Component'
 import StyleBuilder from '../common/ui/StyleBuilder'
 import GamePlay from '../GamePlay/GamePlay'
 import MapDimension from './MapDimension'
-import MapRendering from './MapRendering'
-import { Dictionary, factoryTilemap, serializeMap } from './Tilemap'
-import TilePicker from './TilePicker'
+import MapOverview from './MapOverview'
+import { factoryTilemap, serializeMap } from './Tilemap'
 import isButtonDisabled from './validations/isButtonDisabled'
 import toValidationMessages from './validations/toValidationMessages'
 import ValidationMessages from './validations/ValidationMessages'
@@ -60,19 +57,6 @@ padding: 0 0.5rem 1rem 0;
 display: flex;
 flex-direction: column;
 width: 100%;
-`
-className.scope('.MapOverview').scope('h3')`width: 100%;`.pop()`
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    `
-className.scope('.MapOverview .tile-button-picker')`
-  background-color: transparent;
-  border: 1px dotted #fff;
-  width: 100%;
-  height: 100%;
 `
 
 export default function MapEditor() {
@@ -148,83 +132,6 @@ export default function MapEditor() {
         rows,
       }),
       new MapSubmission({ messages, tilemap }),
-    ],
-  })
-}
-console.log({ Popper })
-function MapOverview({ setTilemap: set, tilemap, columns, rows }) {
-  let popper = null
-  let unsubscribe = null
-
-  const openPopper = ({ column, row, ref }) => {
-    const setTilemap = (value) => {
-      set({
-        rowIndex: row,
-        columnIndex: column,
-        value,
-      })
-    }
-    const tilePicker = new TilePicker({
-      setTilemap,
-      value: (tilemap[row] || [])[column] || [Dictionary.None],
-    })
-    if (unsubscribe) {
-      popper.destroy()
-      unsubscribe()
-    }
-    document.body.appendChild(tilePicker.node())
-    popper = new Popper(ref, tilePicker.node(), {
-      placement: 'auto',
-      positionFixed: false,
-      removeOnDestroy: true,
-    })
-
-    console.log({ ref, tilePicker: tilePicker.node() })
-    let isOpen = false
-    unsubscribe = useClickOutside(tilePicker.node(), (e, isClickingOutside) => {
-      if (isClickingOutside && isOpen) {
-        console.log('destroying')
-        unsubscribe()
-        unsubscribe = null
-        popper.destroy()
-      }
-      isOpen = true
-    })
-  }
-
-  return new Component('div', {
-    className: className.for('MapOverview'),
-    children: [
-      new Component('h3', { children: 'Map Overview' }),
-      new Component('div', {
-        children: [
-          new MapRendering({
-            cellRenderer: ({ key, column, row, children }) => {
-              const button = new Component('button', {
-                className: className.for('tile-button-picker'),
-                children,
-                key,
-                events: {
-                  click: (e) => {
-                    e.preventDefault()
-                    console.log('opening popper')
-                    openPopper({ column, row, ref: button.node() })
-                  },
-                },
-              })
-
-              return button
-            },
-            tilemap,
-            columns,
-            rows,
-            viewport: {
-              width: () => window.innerWidth - 16,
-              height: () => window.innerHeight * 0.7,
-            },
-          }),
-        ],
-      }),
     ],
   })
 }

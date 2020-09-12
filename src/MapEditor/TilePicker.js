@@ -23,11 +23,12 @@ className.scope('.content')`
 className.scope('button')`
   width: 100px;
   height: 100px;
+  box-sizing: border-box;
   background-color: #c0c0c0;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 3px solid #fff;
 `
 className.scope('button.selected')`
-  border-color: rgb(30, 200, 78);
+  border: 3px solid rgb(30, 200, 78);
 `
 
 const DATA_VALUE = 'data-value'
@@ -69,7 +70,7 @@ function TileOption({ click, option, value }) {
       [DATA_VALUE]: tokenValue,
     },
     classList: {
-      [className.for('selected')]: value === tokenValue,
+      [className.for('selected')]: value[0] === tokenValue,
     },
     events: { click },
     children: [new MAP_TILEMAP[tokenValue]({ key: tokenValue })],
