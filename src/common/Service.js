@@ -6,7 +6,7 @@ import ObservableState from './ObservableState'
 const ROW_SEPARATOR = '+'
 const COLUMN_SEPARATOR = ''
 const CELL_SEPARATOR = ''
-const PAGE_SIZE = 10
+const PAGE_SIZE = 100
 
 function init(state) {
   firebase.auth().signInAnonymously()
