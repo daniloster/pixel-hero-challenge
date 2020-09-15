@@ -11,6 +11,7 @@ const className = new CSS('challenge')
 className.scope(
   'display: flex; flex-wrap: wrap; flex-direction: row; width: 100%;',
 )
+className.scope('> section', 'width: 100%;')
 className.scope(
   '.wrapper',
   'display: flex; flex-wrap: wrap; flex-direction: row; min-width: 100%;',
