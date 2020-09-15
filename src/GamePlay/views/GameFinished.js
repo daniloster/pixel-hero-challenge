@@ -26,6 +26,11 @@ className.scope(
   'word-break: keep-all; white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis; display: none;',
 )
 className.scope('button', 'padding: 0.5rem;')
+className.scope('.trophy', 'display: flex; justify-content: center;')
+className.scope(
+  '.large-icon',
+  'margin: 0; transform: scale(17); transform-origin: center top;',
+)
 
 function createButton({ errorMessage, isMapEditor, url, serialized }) {
   return new Button({
@@ -133,6 +138,14 @@ export default function GameFinished({
                 events: {
                   click: onExit,
                 },
+              }),
+            ],
+          }),
+          new Component('div', {
+            className: className.for('trophy'),
+            children: [
+              new Component('i', {
+                className: `${className.for('large-icon')} nes-icon trophy`,
               }),
             ],
           }),

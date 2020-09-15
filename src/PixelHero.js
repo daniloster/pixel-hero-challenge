@@ -78,7 +78,7 @@ CSS.global`
       max-height: 100vh;
       // background: lightgray;
     }
-    *:not(.fa) {
+    *:not(.fa):not(.nes-icon) {
       font-family: 'Press Start 2P', cursive;
     }
     #canvas {
@@ -103,6 +103,7 @@ className`
     margin: 0;
     color: #F2B409;
     `
+className.scope('> *', 'width: 100%;')
 className.scope('.game')`
   display: none;
   padding: 0.5rem 0;
@@ -144,7 +145,7 @@ export default function PixelHero() {
     ),
     children: [
       new Component('div', {
-        children: '<span style="font-size: 0.2rem;">v1.5</span>',
+        children: '<span style="font-size: 0.2rem;">v1.6</span>',
         html: true,
       }),
       new Component('h1', { children: 'Pixel Hero' }),
