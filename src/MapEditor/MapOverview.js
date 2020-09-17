@@ -23,6 +23,7 @@ className.scope('.tile-button-picker')`
 `
 
 export default function MapOverview({
+  className: extClassName,
   setTilemap: set,
   tilemap,
   columns,
@@ -69,8 +70,8 @@ export default function MapOverview({
     })
   }
 
-  return new Component('div', {
-    className,
+  const container = new Component('div', {
+    className: className.with([extClassName]),
     children: [
       new Component('h3', { children: 'Map Overview' }),
       new Component('div', {
@@ -96,11 +97,14 @@ export default function MapOverview({
             rows,
             viewport: {
               width: () => window.innerWidth - 16,
-              height: () => window.innerHeight * 0.55 - 120,
+              height: () =>
+                window.innerHeight - (120 + (container.offsetTop || 360)),
             },
           }),
         ],
       }),
     ],
   })
+
+  return container
 }

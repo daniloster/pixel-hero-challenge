@@ -9,7 +9,6 @@ className`
   z-index: 20;
 `
 className.scope('.content')`
-  width: 60vw;
   max-width: calc(300px + 1rem);
   padding: 0.5rem;
   margin: 0.5rem;
@@ -24,8 +23,8 @@ className.scope('button')`
   width: 100px;
   height: 100px;
   box-sizing: border-box;
-  background-color: #c0c0c0;
   border: 3px solid #fff;
+  background-color: #c0c0c0;
 `
 className.scope('button.selected')`
   border: 3px solid rgb(30, 200, 78);

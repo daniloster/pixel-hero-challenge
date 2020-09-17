@@ -28,6 +28,9 @@ className.scope('h2')`
   width: 100%;
 `
 
+className.scope('.map-overview')`
+  padding-bottom: 4rem;
+`
 className.scope('.MapSubmission')`
   display: flex;
   flex-direction: row;
@@ -127,6 +130,7 @@ export default function MapEditor() {
       new ValidationMessages({ messages }),
       new MapOverview({
         ...tilemapActions,
+        className: className.for('map-overview'),
         tilemap,
         columns,
         rows,
