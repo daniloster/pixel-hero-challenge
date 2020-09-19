@@ -1,5 +1,5 @@
 const path = require('path')
-// const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkerPlugin = require('worker-plugin')
@@ -28,6 +28,11 @@ module.exports = {
     },
     extensions: ['.mjs', '.js', '.ts'],
     mainFields: ['browser', 'module', 'main'],
+  },
+  resolveLoader: {
+    alias: {
+      worker: 'worker-plugin/loader?name=pwa-worker',
+    },
   },
   module: {
     rules: [
@@ -85,17 +90,25 @@ module.exports = {
   },
   plugins: [
     new WorkerPlugin(),
-    // env.production &&
-    //   new CompressionWebpackPlugin({
-    //     filename: '[file]',
-    //     algorithm: 'gzip',
-    //     test: /\.jsx?$|\.css$|\.html$/,
-    //     compressionOptions: {
-    //       level: 9,
-    //     },
-    //     threshold: 10240,
-    //     minRatio: 0.8,
-    //   }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: './dev/assets',
+          to: './',
+        },
+      ],
+    }),
+    !env.production &&
+      new CompressionWebpackPlugin({
+        filename: '[file]',
+        algorithm: 'gzip',
+        test: /\.jsx?$|\.css$|\.html$/,
+        compressionOptions: {
+          level: 9,
+        },
+        threshold: 10240,
+        minRatio: 0.8,
+      }),
     new HtmlWebpackPlugin({
       title: 'Pixel Hero',
       templateContent: `
@@ -109,6 +122,13 @@ module.exports = {
       }
     </style>
     <meta name="viewport" content="width=device-width">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./images/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="./images/logo.png" />
+    <meta name="description" content="Web Game to solve or create challenges and send to friends" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="background-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#000000" />
     <link href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P" rel="stylesheet">
     <!-- minify -->
     <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet">

@@ -9,14 +9,20 @@ const CELL_SEPARATOR = ''
 const PAGE_SIZE = 100
 
 function init(state) {
+  let attempt = 0
   firebase.auth().signInAnonymously()
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       state.set(() => 'loaded')
       uid.set(() => user.uid)
     } else {
-      firebase.auth().signInAnonymously()
-      uid.set(() => user.uid)
+      uid.set(() => null)
+      if (attempt < 3) {
+        setTimeout(() => {
+          attempt += 1
+          firebase.auth().signInAnonymously()
+        }, 1000)
+      }
     }
   })
 }

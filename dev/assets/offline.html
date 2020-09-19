@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    </style>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./images/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="./images/logo.png" />
+    <meta
+      name="description"
+      content="Web Game to solve and create challenges to friends"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="background-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#000000" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .offline {
+        padding: 2rem;
+      }
+
+      .offline-title {
+        padding: 0 0 2rem 0;
+      }
+
+      .inline {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 4rem;
+      }
+    </style>
+  </head>
+
+  <body class="offline">
+    <canvas id="canvas"></canvas>
+    <div id="root" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
+
+    <div class="offline-title">
+      <h1>Pixel Hero</h1>
+      <sub>Challenge</sub>
+    </div>
+
+    <section class="nes-container with-title">
+      <h3 class="title">Device Offline</h3>
+      <section class="message-list">
+        <section class="message inline">
+          <i class="nes-bcrikko"></i>
+          <!-- Balloon -->
+          <div class="nes-balloon from-left">
+            <p>
+              Your device is offline at the moment, try loading the game later.
+            </p>
+          </div>
+        </section>
+      </section>
+    </section>
+  </body>
+</html>
