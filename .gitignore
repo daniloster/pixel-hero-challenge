@@ -20,5 +20,8 @@ lib/
 **/.jest-cache/
 **/__data__/**
 
+# Monitoring
+**/.analyzer/**
+
 # Firebase
 hosting.*

@@ -7,6 +7,10 @@
     "build": "NODE_ENV=production webpack --config tools/webpack/webpack.config.js --mode production",
     "start": "NODE_ENV=development PORT=4000 webpack-dev-server --config tools/webpack/webpack.config.js --mode development",
     "test": "cross-env NODE_ENV=test jest --config jest.config.js",
+    "preprofile": "(rm -rf ./.analyzer/ || echo 'NO FOLDER .analyzer') && mkdir -p ./.analyzer/",
+    "profile": "cross-env NODE_ENV=profile webpack --config tools/webpack/webpack.config.js --profile --json > ./.analyzer/stats.json",
+    "preanalyze": "yarn profile",
+    "analyze": "webpack-bundle-analyzer ./.analyzer/stats.json",
     "predeploy": "yarn build",
     "deploy": "firebase deploy",
     "firebase": "firebase",
@@ -63,6 +67,7 @@
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0",
+    "webpack-bundle-analyzer": "3.9.0",
     "window-crypto": "1.1.0",
     "worker-plugin": "5.0.0"
   },

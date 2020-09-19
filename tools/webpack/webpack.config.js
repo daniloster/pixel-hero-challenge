@@ -4,9 +4,14 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkerPlugin = require('worker-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 const DEV_PORT = process.env.PORT
-const env = { production: process.env.NODE_ENV === 'production' }
+const env = {
+  production: process.env.NODE_ENV === 'production',
+  profile: process.env.NODE_ENV === 'profile',
+}
 console.log({ env })
 module.exports = {
   entry: './dev/index.js',
@@ -89,16 +94,19 @@ module.exports = {
     ].filter((isValid) => !!isValid),
   },
   plugins: [
+    env.profile && new BundleAnalyzerPlugin(),
     new WorkerPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: './dev/assets',
-          to: './',
-        },
-      ],
-    }),
-    !env.production &&
+    !env.profile &&
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: './dev/assets',
+            to: './',
+          },
+        ],
+      }),
+    !env.profile &&
+      !env.production &&
       new CompressionWebpackPlugin({
         filename: '[file]',
         algorithm: 'gzip',
@@ -109,9 +117,10 @@ module.exports = {
         threshold: 10240,
         minRatio: 0.8,
       }),
-    new HtmlWebpackPlugin({
-      title: 'Pixel Hero',
-      templateContent: `
+    !env.profile &&
+      new HtmlWebpackPlugin({
+        title: 'Pixel Hero',
+        templateContent: `
 <html>
   <head>
     <style>
@@ -167,6 +176,6 @@ module.exports = {
   </body>
 </html>
       `.trim(),
-    }),
+      }),
   ].filter((isValid) => !!isValid),
 }
