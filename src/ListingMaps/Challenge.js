@@ -71,7 +71,6 @@ export default function Challenge(item) {
       new Card({
         className: className.for('wrapper'),
         button: {
-          attrs: { 'aria-label': 'Play' },
           children: [new Icon({ name: 'gamepad' })],
           click: () => history.push(`/challenge/${item.id}`),
         },

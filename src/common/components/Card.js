@@ -16,7 +16,7 @@ export default function Card({ className: _className, children, button = {} }) {
         ),
       }),
       new Component('button', {
-        attrs: { type: 'button' },
+        attrs: { type: 'button', 'aria-label': 'Play' },
         className: ObservableState.observeTransform(
           button.state,
           (state) => `nes-btn is-${state || 'primary'} showcode`,
