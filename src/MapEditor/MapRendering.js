@@ -125,7 +125,11 @@ export default function MapRendering({
 
 const classNameTile = new CSS('tile')
 classNameTile.scope(
-  `position: absolute; width: calc(var(--unitSize) * 1px); height: calc(var(--unitSize) * 1px);`,
+  `
+  position: absolute;
+  width: calc(var(--unitSize) * 1px);
+  height: calc(var(--unitSize) * 1px);
+  font-size: 0;`,
 )
 classNameTile.scope(`left: calc(var(--column) * var(--unitSize) * 1px);`)
 classNameTile.scope(`top: calc(var(--row) * var(--unitSize) * 1px);`)
