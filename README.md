@@ -1,5 +1,7 @@
 # Pixel Hero Challenge
 
+[Play the game here](https://pixel-hero-challenge.web.app/)
+
 This project started from [js13kgames](https://js13kgames.com/) which consists in building a web game within 13Kb. I got a point where it was working and it had 12Kb, and my goal was evolving as I was getting more and more excited with the challenge.
 
 I have decided to drop the initial challenge and add more capabilities which would increase the bundle size overall. 2 killer additions were firebase and popperjs. These easily pushed the game far beyond the 13Kb. Not a big deal, and still happy with the result.
