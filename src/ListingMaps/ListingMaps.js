@@ -10,7 +10,7 @@ className.scope('font-size: 0.7rem;')
 className.scope(['h2', 'p'], 'padding: 0.2rem;')
 className.scope(
   '.games',
-  'display: grid; grid-template-columns: repeat(auto-fit, 380px); grid-gap: 1rem; justify-content: center;',
+  'display: grid; grid-template-columns: repeat(auto-fit, 340px); grid-gap: 1rem; justify-content: center;',
 )
 className.media(
   'screen and (min-width: 500px)',
