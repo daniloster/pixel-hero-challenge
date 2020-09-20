@@ -29,8 +29,11 @@ className.scope(
   `
   transform: rotate(45deg);
   --unit: var(--unit);
-  width: var(--unit);
-  height: var(--unit);
+  width: calc(1px * var(--unit));
+  height: calc(1px * var(--unit));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 `,
 )
 className.scope(
