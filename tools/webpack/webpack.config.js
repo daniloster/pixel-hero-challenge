@@ -1,6 +1,6 @@
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkerPlugin = require('worker-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
@@ -105,18 +105,18 @@ module.exports = {
           },
         ],
       }),
-    !env.profile &&
-      !env.production &&
-      new CompressionWebpackPlugin({
-        filename: '[file]',
-        algorithm: 'gzip',
-        test: /\.jsx?$|\.css$|\.html$/,
-        compressionOptions: {
-          level: 9,
-        },
-        threshold: 10240,
-        minRatio: 0.8,
-      }),
+    // !env.profile &&
+    //   !env.production &&
+    //   new CompressionWebpackPlugin({
+    //     filename: '[file]',
+    //     algorithm: 'gzip',
+    //     test: /\.jsx?$|\.css$|\.html$/,
+    //     compressionOptions: {
+    //       level: 9,
+    //     },
+    //     threshold: 10240,
+    //     minRatio: 0.8,
+    //   }),
     !env.profile &&
       new HtmlWebpackPlugin({
         title: 'Pixel Hero',
@@ -128,6 +128,21 @@ module.exports = {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      .offline {
+        padding: 2rem;
+      }
+
+      .offline-title {
+        padding: 0 0 2rem 0;
+      }
+
+      .inline {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 4rem;
       }
     </style>
     <meta name="viewport" content="width=device-width">
@@ -146,6 +161,31 @@ module.exports = {
     <canvas id="canvas"></canvas>
     <div id="root" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <noscript>
+      <div class="offline">
+        <div class="offline-title">
+          <h1>Pixel Hero</h1>
+          <sub>Challenge</sub>
+        </div>
+
+        <section class="nes-container with-title">
+          <h3 class="title">Device Offline</h3>
+          <section class="message-list">
+            <section class="message inline">
+              <i class="nes-bcrikko"></i>
+              <!-- Balloon -->
+              <div class="nes-balloon from-left">
+                <p>
+                  Unfortunately, your device does not support javascript.
+                  Try updating the browser or installing chrome.
+                </p>
+              </div>
+            </section>
+          </section>
+        </section>
+      </div>
+    </noscript>
+    
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
 
