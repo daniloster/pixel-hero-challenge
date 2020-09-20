@@ -48,14 +48,22 @@ export default function Component(tag, props) {
     onResize = null,
   } = props || EMPTY_OBJECT
   this.children = children
-  this.key = key || uuid()
   const create = ns
     ? (tag) => document.createElementNS(ns, tag)
     : (tag) => document.createElement(tag)
   /** @type {HTMLElement} */
   const element = (this[internalRef] = create(tag))
 
-  if (key) element.setAttribute(DATA_ITERATION_KEY, key)
+  if (key instanceof ObservableState) {
+    ObservableState.observe(key, (keyValue) => {
+      this.key = keyValue
+      if (keyValue) element.setAttribute(DATA_ITERATION_KEY, keyValue)
+    })
+  } else {
+    this.key = key || uuid()
+    if (key) element.setAttribute(DATA_ITERATION_KEY, key)
+  }
+
   if (className) factoryAssignment(element, 'className', className)
   let onDestroyHandler = onDestroy
   if (onResize) {

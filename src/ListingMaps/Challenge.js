@@ -40,7 +40,6 @@ function getBounds(item) {
   const columns = (item.tilemap[0] || []).length + 1
   const ratioWidth = 100 / columns
   const ratioHeight = 100 / rows
-  // console.log({ ratioWidth, ratioHeight, columns, rows })
   const ratio = Math.floor(Math.min(ratioWidth, ratioHeight))
   const width = ObservableState.create(ratio * columns)
   const height = ObservableState.create(ratio * rows)
@@ -66,6 +65,7 @@ function info(children, _className) {
 
 export default function Challenge(item) {
   return new Component('div', {
+    key: item.id,
     className,
     children: [
       new Card({

@@ -163,10 +163,7 @@ export default function PixelHero() {
             routes: [
               ['/', () => new ListingMaps()],
               ['/editor', () => new MapEditor()],
-              [
-                '/challenge/{id}',
-                ({ params }) => new GamePlayById({ id: params.id }),
-              ],
+              ['/challenge/{id}', ({ params }) => new GamePlayById({ params })],
             ],
           }),
         ],

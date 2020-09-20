@@ -176,7 +176,6 @@ function score(id) {
                     console.error(error)
                     reject(error)
                   } else {
-                    console.log('scored')
                     resolve()
                   }
                 },

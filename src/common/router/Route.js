@@ -55,30 +55,30 @@ className.scope('display: none;')
 className.modifier('.is-active', 'display: block;')
 
 export default function Route({ path, factoryPage }) {
-  const routeMetadata = ObservableState.observeTransform(
-    routerState,
-    (currentPath) => [
-      path === currentPath || toRegExp(path)[0].test(currentPath),
-      currentPath,
-    ],
+  const route = ObservableState.observeTransform(routerState, (currentPath) => [
+    path === currentPath || toRegExp(path)[0].test(currentPath),
+    currentPath,
+  ])
+  const params = ObservableState.observeTransform(
+    route,
+    ([isActive, currentPath]) => toParams(currentPath, path),
   )
+  let component = null
+
   return new Component('div', {
     className,
-    classList: ObservableState.observeTransform(
-      routeMetadata,
-      ([isActive]) => ({
-        [className.for('is-active')]: isActive,
-      }),
-    ),
-    children: ObservableState.observeTransform(
-      routeMetadata,
-      ([isActive, currentPath]) => {
-        if (isActive) {
-          return [factoryPage({ params: toParams(currentPath, path) })]
+    classList: ObservableState.observeTransform(route, ([isActive]) => ({
+      [className.for('is-active')]: isActive,
+    })),
+    children: ObservableState.observeTransform(route, ([isActive]) => {
+      if (isActive) {
+        if (!component) {
+          component = factoryPage({ params })
         }
+        return [component]
+      }
 
-        return []
-      },
-    ),
+      return []
+    }),
   })
 }

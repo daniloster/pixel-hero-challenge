@@ -39,12 +39,12 @@ path /maps {
 }
 
 path /maps/{id} is MapSerialized {
-  read() { auth != null }
+  read() { true }
   write() { auth != null && prior(this) == null && this != null && isNewMap(prior(this), this) }
 }
 
 path /maps/{id}/score is Number {
-  read() { auth != null }
+  read() { true }
   write() { auth != null && (prior(this) != null || prior(this).parent() == null) }
 }
 

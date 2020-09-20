@@ -62,7 +62,6 @@ export default function TilePicker({
 
 function TileOption({ click, option, value }) {
   const [_, tokenValue] = option
-  console.log({ tokenValue })
   return new Component('button', {
     attrs: {
       type: 'button',

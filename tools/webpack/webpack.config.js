@@ -197,7 +197,7 @@ module.exports = {
     <!-- Add Firebase products that you want to use -->
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script> -->
 
     <script>
       // Your web app's Firebase configuration

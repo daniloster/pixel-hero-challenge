@@ -53,13 +53,13 @@
         },
         "score": {
           ".validate": "(newData.isNumber() && newData.isNumber())",
-          ".read": "auth != null",
+          ".read": "true",
           ".write": "(auth != null && (data.val() != null || data.parent().val() == null))"
         },
         "$other": {
           ".validate": "false"
         },
-        ".read": "auth != null",
+        ".read": "true",
         ".write": "(((auth != null && data.val() == null) && newData.val() != null) && (data.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('uid').val() == auth.uid && newData.child('id').val() == data.parent().parent().child('saved_maps').child(newData.child('serialized').val()).child('key').val()))"
       }
     }

@@ -30,22 +30,27 @@ className.scope(
 `,
 )
 
-export default function GamePlayById({ id }) {
+export default function GamePlayById({ params }) {
+  const id = ObservableState.observeTransform(params, ({ id }) => id)
   const map = ObservableState.create(null)
   const error = ObservableState.create(null)
   const state = ObservableState.create(null)
-  Service.getMap(id)
-    .then((value) => {
-      map.set(() => value.tilemap)
-    })
-    .catch(() => {
-      error.set(() => `Sorry, we could not load the map [${id}].`)
-    })
+  ObservableState.observe(params, ({ id }) => {
+    if (id) {
+      Service.getMap(id)
+        .then((value) => {
+          map.set(() => value.tilemap)
+        })
+        .catch(() => {
+          error.set(() => `Sorry, we could not load the map [${id}].`)
+        })
+    }
+  })
 
   state.subscribe({
     next: (values) => {
       if (values.includes(GameState.Succeed)) {
-        Service.score(id)
+        Service.score(id.get())
         Confetti.start()
       } else {
         Confetti.stop()

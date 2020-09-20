@@ -58,13 +58,10 @@ function isEqual(node, oldNode, hash) {
     return false
   }
 
-  const nodes = [].concat(node)
-  const oldNodes = [].concat(oldNode)
-
-  const hashedNodes = !!hash && hash(nodes)
-  const hashedOldNodes = !!hash && hash(oldNodes)
+  const hashedNodes = !!hash && hash([].concat(node))
+  const hashedOldNodes = !!hash && hash([].concat(oldNode))
   const same =
-    nodes.length === oldNodes.length &&
+    node?.length === oldNode?.length &&
     hashedNodes !== '' &&
     hashedOldNodes !== '' &&
     hashedNodes === hashedOldNodes

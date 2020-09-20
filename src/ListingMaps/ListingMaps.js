@@ -2,7 +2,6 @@ import ObservableState from '../common/ObservableState'
 import Service from '../common/Service'
 import Component from '../common/ui/Component'
 import CSS from '../common/ui/CSS'
-import countMaps from '../countMaps'
 import Challenge from './Challenge'
 
 const className = new CSS('listing-maps')
@@ -22,8 +21,8 @@ export default function ListingMaps() {
   const page = ObservableState.create(0)
   const data = ObservableState.create([])
 
-  ObservableState.observe([page, countMaps], (pageIndex, totalMaps) => {
-    Service.listMaps(pageIndex, totalMaps).then((tilemaps) => {
+  ObservableState.observe(page, (pageIndex) => {
+    Service.listMaps(pageIndex).then((tilemaps) => {
       data.set(() => tilemaps)
     })
   })
@@ -39,8 +38,13 @@ export default function ListingMaps() {
       }),
       new Component('div', {
         className: className.for('games'),
-        children: ObservableState.observeTransform(data, (values) =>
-          values.map((item) => new Challenge(item)),
+        children: ObservableState.observeTransformSync(
+          data,
+          (values) => {
+            return values.map((item) => new Challenge(item))
+          },
+          (dataSource) =>
+            `${dataSource?.length}-${dataSource.map(({ id }) => id).join('-')}`,
         ),
       }),
     ],
