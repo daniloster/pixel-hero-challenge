@@ -6,7 +6,7 @@ Big thanks to the [NES.css](https://nostalgic-css.github.io/NES.css) which allow
 
 This project started from [js13kgames](https://js13kgames.com/) which consists in building a web game within 13Kb. I got a point where it was working and it had 12Kb, and my goal was evolving as I was getting more and more excited with the challenge.
 
-I have decided to drop the initial challenge and add more capabilities which would increase the bundle size overall. 2 killer additions were firebase and popperjs. These easily pushed the game far beyond the 13Kb. Not a big deal, and still happy with the result.
+I have decided to drop the initial challenge and add more capabilities which would increase the bundle size overall. 2 killer additions were [firebase](https://firebase.google.com/docs/) and [popperjs](https://popper.js.org/). These easily pushed the game far beyond the 13Kb. Not a big deal, and still happy with the result.
 
 The good stuff happened in the journey. I got a minimal setup which allowed me to build web applications with observable states.
 
