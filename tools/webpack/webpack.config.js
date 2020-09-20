@@ -121,7 +121,8 @@ module.exports = {
       new HtmlWebpackPlugin({
         title: 'Pixel Hero',
         templateContent: `
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <style>
       * {
@@ -145,6 +146,7 @@ module.exports = {
         gap: 4rem;
       }
     </style>
+    <title>Pixel Hero Challenge</title>
     <meta name="viewport" content="width=device-width">
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./images/logo.png" />
